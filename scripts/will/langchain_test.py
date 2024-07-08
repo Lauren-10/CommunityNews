@@ -7,7 +7,7 @@ import pprint
 from langchain_openai import ChatOpenAI
 from scn_src.lang_chain_utils import load_docs,extract_metadata,extract_all_metadata
 
-llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-0613")
+llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
 
 # Transform
 
