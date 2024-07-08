@@ -30,4 +30,4 @@ urls = ['https://vtdigger.org/2024/02/11/anglers-flock-to-lake-elmore-for-free-i
 
 tags_to_extract = ['p','span','a','div']
 
-extracted_tags = extract_all_metadata(urls,llm,schema)
+extracted_tags = extract_all_metadata(urls,llm,schema,tags_to_extract=tags_to_extract)
