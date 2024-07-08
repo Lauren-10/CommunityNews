@@ -10,13 +10,16 @@ from langchain_openai import ChatOpenAI
 def extract(content: str, schema: dict,llm):
     return create_extraction_chain(schema=schema, llm=llm).run(content)
 
-def scrape_with_playwright(urls, schema,llm):
+def load_docs(urls,tags_to_extract = ["span",'p']): 
     loader = AsyncChromiumLoader(urls)
     docs = loader.load()
     bs_transformer = BeautifulSoupTransformer()
     docs_transformed = bs_transformer.transform_documents(
         docs, tags_to_extract=["span"]
     )
+    return docs_transformed 
+
+def scrape_with_playwright(urls, schema,llm):
     print("Extracting content with LLM")
 
     # Grab the first 1000 tokens of the site

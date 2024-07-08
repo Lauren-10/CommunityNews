@@ -5,7 +5,7 @@
 #from langchain.chains import create_extraction_chain
 #import pprint
 from langchain_openai import ChatOpenAI
-from scn_src.lang_chain_utils import extract, scrape_with_playwright
+from scn_src.lang_chain_utils import extract, scrape_with_playwright,load_docs
 
 llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-0613")
 
@@ -23,4 +23,9 @@ schema = {
 
 urls = ["https://www.nytimes.com/2019/06/20/technology/tech-giants-antitrust-law.html","https://vtcynic.com/features/its-more-than-a-drunk-cig-cigarettes-on-uvms-campus/","https://www.sevendaysvt.com/news/scott-vetoes-renewable-energy-bill-40969930"]
 
-extracted_content = scrape_with_playwright(urls, schema=schema,llm = llm)
+docs = load_docs(urls)
+extracted_content_list()
+
+for doc in docs: 
+        extracted_content = extract(schema=schema, content=doc,llm = llm)
+        extracted_content_list.append(extracted_content)
