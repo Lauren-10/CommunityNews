@@ -64,6 +64,12 @@ class DBConnector:
         with self.engine.connect() as connection:
             df.to_sql(table_name, con=self.engine, if_exists='append', index=False)
 
+    # def load_df_from_table(self, query):
+    #     with self.engine.connect() as connection:
+    #        df = pd.read_sql(query, con=self.engine, if_exists='append', index=False)
+    #     return df
+
+
     def query_db(self,query):
 
         Session = sessionmaker(bind=self.engine)
@@ -72,8 +78,12 @@ class DBConnector:
         # Execute a plaintext SQL query
         sql_query = text(query)
         result = session.execute(sql_query)
-        rows = result.fetchall()
-        return rows
+        try:
+            rows = result.fetchall()
+            return rows
+        except:
+            print("no result returned")
+        
 
 
 
@@ -181,5 +191,8 @@ class MySQLConnector(DBConnector):
         super().load_data_to_sql(table_name,df = df,unique_keys = unique_keys,if_exists = if_exists)
         print(f"Data has been loaded into {table_name} in database at {self.host}:{self.database}")
 
-        
+    def load_df_from_table(self, query):
+        with self.engine.connect() as connection:
+           df = pd.read_sql(query, con=self.engine)#, if_exists='append', index=False
+        return df
 
