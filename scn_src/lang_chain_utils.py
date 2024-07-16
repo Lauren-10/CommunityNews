@@ -10,24 +10,30 @@ from langchain_openai import ChatOpenAI
 def extract(content: str, schema: dict,llm):
     return create_extraction_chain(schema=schema, llm=llm).run(content)
 
-def scrape_with_playwright(urls, schema,llm):
+def load_docs(urls,tags_to_extract = ["span",'p','a','li']): 
     loader = AsyncChromiumLoader(urls)
     docs = loader.load()
     bs_transformer = BeautifulSoupTransformer()
     docs_transformed = bs_transformer.transform_documents(
-        docs, tags_to_extract=["span"]
+        docs, tags_to_extract=["p", "li", "div", "a"]
     )
-    print("Extracting content with LLM")
-
-    # Grab the first 1000 tokens of the site
+    
+    return docs_transformed 
+    
+def extract_metadata(doc,schema,llm):
     splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-        chunk_size=1000, chunk_overlap=0
+        chunk_size=4097, chunk_overlap=0
     )
-    splits = splitter.split_documents(docs_transformed)
-
-    # Process the first split
-    for split in splits:
-        extracted_content = extract(schema=schema, content=split.page_content,llm = llm)
-        pprint.pprint(extracted_content)
-    pprint.pprint(extracted_content)
+    splits = splitter.split_documents([doc])
+    extracted_content = extract(schema=schema, content=splits[0],llm = llm)
     return extracted_content
+
+def extract_all_metadata(urls,llm,schema,tags_to_extract = ['p','span','a','div']):
+    docs = load_docs(urls,tags_to_extract=tags_to_extract)
+    extracted_content_list = []
+    for i,doc in enumerate(docs): 
+        print(f"extracting document: {i}")
+        extracted_content_list.append(extract_metadata(doc,schema,llm))
+    return extracted_content_list
+    
+    
