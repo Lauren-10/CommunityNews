@@ -25,15 +25,25 @@ schema = {
 }
 
 
-urls = [
-]
+urls = ["https://voiceofoc.org/2024/07/orange-countys-push-for-its-first-veterans-cemetery-gains-momentum/",
+"https://voiceofoc.org/2024/07/orange-countys-push-for-its-first-veterans-cemetery-gains-momentum/"]
 
 
 tags_to_extract = ['p','span','a','div']
 
-extracted_tags = extract_all_metadata(urls,llm,schema,tags_to_extract=tags_to_extract)
-pprint.pprint(extracted_tags)
-df = pd.DataFrame(extracted_tags)
+df = extract_all_metadata(urls,llm,schema,tags_to_extract=tags_to_extract)
+pd.DataFrame.from_dict(df,orient='columns')
+#df = extracted_tags.rename(columns={df.columns[0]: "title", df.columns[1]: "author_name", df.columns[2]: "is_author_student"})
+#print(df['url'])
+pprint.pprint(df)
+list1 = [x for x in df x[0]['is_author_student_journalist']]
+df = pd.DataFrame([{'is_author_student_journalist':list1, 'urls':urls}])
+df.insert(0, "urls", urls)
+df.insert(1, 'news_article_title', 1)
+df.insert(2, 'news_article_author', 2)
+df.insert(3, 'is_author_student_journalist', 3)
+df.insert(4, 'is_article_university_collaboration', 4)
 df.to_csv("test_data.csv")
 print(df.head())
+
 

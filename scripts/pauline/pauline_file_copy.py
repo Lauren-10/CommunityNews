@@ -25,15 +25,21 @@ schema = {
 }
 
 
-urls = [
-]
+urls = ["https://voiceofoc.org/2024/07/orange-countys-push-for-its-first-veterans-cemetery-gains-momentum/",
+"https://voiceofoc.org/2024/07/orange-countys-push-for-its-first-veterans-cemetery-gains-momentum/"]
 
 
 tags_to_extract = ['p','span','a','div']
 
-extracted_tags = extract_all_metadata(urls,llm,schema,tags_to_extract=tags_to_extract)
-pprint.pprint(extracted_tags)
-df = pd.DataFrame(extracted_tags)
-df.to_csv("test_data.csv")
-print(df.head())
-
+df = extract_all_metadata(urls,llm,schema,tags_to_extract=tags_to_extract)
+pd.DataFrame.from_dict(df,orient='columns')
+#df = extracted_tags.rename(columns={df.columns[0]: "title", df.columns[1]: "author_name", df.columns[2]: "is_author_student"})
+#print(df['url'])
+pprint.pprint(df)
+list1 = [x[0] for x in df]
+df = pd.DataFrame(list1)
+df["urls"] = urls
+print(df.columns)
+df['is_student_reported'] = df.is_author_student_journalist | df.is_article_university_collaboration
+print(df.columns)
+df.to_csv('scraper_dataframe.csv')
