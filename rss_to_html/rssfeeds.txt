@@ -1,3 +1,0 @@
-andalusiastarnews,https://www.andalusiastarnews.com/rss
-atmoreadvance,https://www.atmoreadvance.com/rss
-thebrewtonstandard,http://www.brewtonstandard.com/rss
