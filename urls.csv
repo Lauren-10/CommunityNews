@@ -1,4 +1,4 @@
-,name_of_news_source,list_of_urls,title,date_of_pub
+,publication,url,article_title,date
 0,thehornettribune,https://asuhornettribune.com/14534/viewpoints/donald-trumps-conviction-a-reminder-of-many-things/,Donald Trump’s conviction a reminder of many things,2024-06-09
 1,thehornettribune,https://asuhornettribune.com/14494/viewpoints/protests-of-a-different-color/,Protests of a different color,2024-05-18
 2,thehornettribune,https://asuhornettribune.com/14472/viewpoints/justice-for-marilyn-mosby-and-other-black-women/,Justice for Marilyn Mosby and other Black women,2024-05-15
@@ -9,16 +9,16 @@
 7,thehornettribune,https://asuhornettribune.com/14409/university-news/president-emeritus-william-hamilton-harris-dies/,"President Emeritus William Harris, Ph.D., dies in Hilton Head, South Carolina",2024-04-20
 8,thehornettribune,https://asuhornettribune.com/14448/university-news/14448/,Tracy V. Banks Memorial Oratorical Contest amplifies student voices,2024-04-16
 9,thehornettribune,https://asuhornettribune.com/14324/university-news/fourteen-trailblazers-make-history-at-the-university/,Fourteen student trailblazers create history at Alabama State University,2024-04-16
-10,wvua23,https://www.wvua23.com/scooters-coffee-hosting-day-of-giving-july-23-donating-proceeds-to-tuscaloosa-city-schools/,"Scooter’s Coffee hosting Day of Giving July 23, donating proceeds to Tuscaloosa City Schools",2024-07-18
-11,wvua23,https://www.wvua23.com/birmingham-zoo-offering-discounts-tips-for-july-attendees/,"Birmingham Zoo offering discounts, tips for July attendees",2024-07-18
-12,wvua23,https://www.wvua23.com/21-year-old-man-dies-in-walker-county-wreck-thursday-morning/,21-year-old man dies in Walker County wreck Thursday morning,2024-07-18
-13,wvua23,https://www.wvua23.com/para-flag-football-registration-open-for-ages-5-12-through-july-26/,PARA flag football registration open for ages 5-12 through July 26,2024-07-18
-14,wvua23,https://www.wvua23.com/study-international-automakers-contribute-14-5b-to-alabama/,Study: International automakers contribute $14.5B to Alabama,2024-07-18
-15,wvua23,https://www.wvua23.com/heres-where-alabama-baseball-alums-landed-in-2024-mlb-draft/,Here’s where Alabama baseball alums landed in 2024 MLB Draft,2024-07-18
-16,wvua23,https://www.wvua23.com/dch-regional-medical-center-installs-prime-parking-spots-for-pregnant-patients/,DCH Regional Medical Center installs prime parking spots for pregnant patients,2024-07-18
-17,wvua23,https://www.wvua23.com/hale-county-sheriffs-office-seeking-teen-missing-in-moundville/,Update: Missing person alert for Hale County teen canceled,2024-07-18
-18,wvua23,https://www.wvua23.com/council-oks-rezoning-land-on-69-south-for-future-neighborhood-walmart/,Council OKs rezoning land on 69 South for future Neighborhood Walmart,2024-07-18
-19,wvua23,https://www.wvua23.com/today-in-history-july-18-2024/,"Today in History: July 18, 2024",2024-07-18
+10,wvua23,https://www.wvua23.com/greene-county-district-attorney-faces-possible-removal-from-voting-day/,Democratic Greene County circuit court candidate could be thrown off ballot,2024-07-19
+11,wvua23,https://www.wvua23.com/fayette-middle-school-parents-express-concern-at-back-to-school-meeting/,Fayette Middle School parents express concern at back-to-school meeting,2024-07-19
+12,wvua23,https://www.wvua23.com/hale-county-middle-school-gets-new-outdoor-classroom/,Hale County Middle School gets new outdoor classroom,2024-07-19
+13,wvua23,https://www.wvua23.com/st-francis-of-assisi-university-parish-employee-charged-with-wire-fraud/,St. Francis of Assisi University Parish employee charged with wire fraud,2024-07-19
+14,wvua23,https://www.wvua23.com/visit-tuscaloosa-junior-championship-ends-thursday-with-alabama-winners/,Visit Tuscaloosa Junior Championship ends Thursday with Alabama winners,2024-07-19
+15,wvua23,https://www.wvua23.com/netflixs-subscriber-and-earnings-growth-gather-more-momentum-as-password-sharing-crackdown-pays-off/,Netflix’s subscriber and earnings growth gather more momentum as password-sharing crackdown pays off,2024-07-19
+16,wvua23,https://www.wvua23.com/tiger-woods-ends-his-season-by-missing-the-cut-in-the-british-open/,Tiger Woods ends his season by missing the cut in the British Open,2024-07-19
+17,wvua23,https://www.wvua23.com/fact-focus-a-look-at-claims-made-at-the-republican-national-convention-as-trump-accepts-nomination/,FACT FOCUS: A look at claims made at the Republican National Convention as Trump accepts nomination,2024-07-19
+18,wvua23,https://www.wvua23.com/four-children-and-one-woman-killed-in-bibb-county-shooting/,Four children and one woman killed in Bibb County shooting,2024-07-19
+19,wvua23,https://www.wvua23.com/bidens-campaign-chair-acknowledges-support-slippage-but-says-hes-staying-in-the-race/,Biden’s campaign chair acknowledges support ‘slippage’ but says he’s staying in the race,2024-07-19
 20,deltadigitalnewsservice,https://deltanewsservice.com/2024/05/31/legends-bbq-a-thriving-figure-of-the-nea-black-community/,Legends BBQ a thriving figure of the NEA black community,2024-05-31
 21,deltadigitalnewsservice,https://deltanewsservice.com/2024/05/23/nea-celebrates-local-diversity-with-cultural-expo/,NEA celebrates local diversity with cultural expo,2024-05-23
 22,deltadigitalnewsservice,https://deltanewsservice.com/2024/05/02/cityyouth-a-destination-for-youth-when-school-ends/,CityYouth a destination for youth when school ends,2024-05-02

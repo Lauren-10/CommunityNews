@@ -80,11 +80,11 @@ def parse_url(df_rss: pd.DataFrame):
                 continue
 
     #Write this dataframe as a list of dictionaries instead of multiple lists
-    df = pd.DataFrame({"name_of_news_source": news_sources,
-                       "list_of_urls" : rss,
-                       "title" : title,
-                       "date_of_pub" : date})
-    df = df.explode(["name_of_news_source","list_of_urls", "title", "date_of_pub"])
+    df = pd.DataFrame({"publication": news_sources,
+                       "url" : rss,
+                       "article_title" : title,
+                       "date" : date})
+    df = df.explode(["publication","url", "article_title", "date"])
     df = df.reset_index(drop = True)
    
     df.to_csv("urls.csv")
