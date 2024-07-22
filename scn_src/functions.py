@@ -2,18 +2,20 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import re
+from scn_src.db_connectors import MySQLConnector
 
 #create a blank table
-def create_blank_table(connector):
-    create_table = '''CREATE TABLE IF NOT EXISTS url_list (
-    URL varchar(255),
-    Publication varchar(255),
-    Article_title varchar(255),
-    Date DATE,
-    Author varchar(255),
-    Is_student_journalist tinyint(1),
-    PRIMARY KEY(URL))'''
+def create_blank_table(connector, table_name):
+    create_table = f'''CREATE TABLE IF NOT EXISTS {table_name} (
+    publication varchar(255),
+    url varchar(255),
+    article_title varchar(255),
+    date DATE,
+    author varchar(255),
+    is_student tinyint(1))
+    '''
     connector.query_db(create_table)
+    print("table created")
 
 #given PROPERLY LABELED df's of URLS and REGEX, print a df showing whether or not each url was student-written
 def scan_with_regex(url_df, regex_df):

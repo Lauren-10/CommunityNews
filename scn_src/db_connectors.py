@@ -21,7 +21,7 @@ class DBConnector:
         pass
 
     def make_connector(self):
-        pass 
+        pass
     
     def load_csv_to_sqlite(self, csv_path, table_name, if_exists="replace"):
         """
