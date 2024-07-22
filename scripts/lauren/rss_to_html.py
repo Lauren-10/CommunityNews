@@ -36,6 +36,8 @@ def parse_url(df_rss: pd.DataFrame):
     date = []
     test_dates = []
 
+    #lines 41-44 convert the dataframe to a csv
+    #to run the code with a casv, comment out the lines
     df_rss.to_csv("rss_urls.csv")
  
     #open file of rss information
@@ -86,7 +88,11 @@ def parse_url(df_rss: pd.DataFrame):
                        "date" : date})
     df = df.explode(["publication","url", "article_title", "date"])
     df = df.reset_index(drop = True)
-   
+
+    #dataframe return
+    #return df
+    
+    #csv return
     df.to_csv("urls.csv")
 
 
@@ -123,4 +129,4 @@ def rss_url(news_source, link):
 if __name__ == "__main__":
     data = [["thehornettribune" , "https://asuhornettribune.com/feed/"], ["wvua23", "https://www.wvua23.com/feed/"], ["deltadigitalnewsservice" , "https://deltanewsservice.com/feed/"], ["KNKX", "https://www.knkx.org/news.rss"]]
     df = pd.DataFrame(data)
-    parse_url(df)
+    print(parse_url(df))
