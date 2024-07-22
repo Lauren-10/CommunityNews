@@ -90,10 +90,10 @@ def parse_url(df_rss: pd.DataFrame):
     df = df.reset_index(drop = True)
 
     #dataframe return
-    #return df
+    return df
     
     #csv return
-    df.to_csv("urls.csv")
+    #df.to_csv("urls.csv")
 
 
 
