@@ -8,12 +8,6 @@ import random
 
 db_admin = MySQLConnector('wthomps3', permission = 'admin') #this is the connector that will be used to write to the database
 
-webscraper_df = pd.DataFrame({"publication":["fakepub"], "url":["fakeurl"], "article_title":["faketitle"], "date":["2024-01-01"] })
-chatgpt_df = pd.DataFrame({"url":["fakeurl"], "author":["fakeauthor"], "is_student":[random.randint(0,1)]})
-
-
-create_blank_table(db_admin, "student_journalists23_24_test")
-
 # #STEP 1: grab feeds from SQL as a df
 query = '''
     SELECT *
