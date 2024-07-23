@@ -46,6 +46,7 @@ def extract_all_metadata(urls,llm,schema,tags_to_extract = ['p','span','a','div'
         metadata = extract_metadata(doc,schema,llm)
         if metadata is None:
             continue
+        metadata["urls"] = urls[i]
         extracted_content_list.append(extract_metadata(doc,schema,llm))
     return extracted_content_list
     
