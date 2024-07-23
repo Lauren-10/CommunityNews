@@ -27,16 +27,16 @@ schema = {
 }
 
 
-urls = url[32:]
+urls = url[30:]
 
 
 tags_to_extract = ['p','span','a','div']
 
 df = extract_all_metadata(urls,llm,schema,tags_to_extract=tags_to_extract)
+breakpoint()
 df = pd.DataFrame.from_dict(df,orient='columns')
 pprint.pprint(df)
 print(type(df))
-
 #converting the output into a csv file
 # for i in range(5):
 #     if df[i] == []: 
