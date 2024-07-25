@@ -4,7 +4,6 @@ from langchain_community.document_transformers import BeautifulSoupTransformer
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import AsyncChromiumLoader
 import asyncio
-from playwright.async_api import async_playwright
 from langchain.chains import create_extraction_chain
 import pprint
 from langchain_openai import ChatOpenAI

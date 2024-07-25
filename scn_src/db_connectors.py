@@ -60,9 +60,9 @@ class DBConnector:
                 connection.execute(text(insert_query), parameters=values)
             connection.commit()
 
-    def add_df_to_table(self, table_name, df):
+    def add_df_to_table(self, table_name, df, if_exists='replace'):
         with self.engine.connect() as connection:
-            df.to_sql(table_name, con=self.engine, if_exists='append', index=False)
+            df.to_sql(table_name, con=self.engine, if_exists=if_exists, index=False)
 
     # def load_df_from_table(self, query):
     #     with self.engine.connect() as connection:

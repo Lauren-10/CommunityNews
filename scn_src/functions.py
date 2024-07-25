@@ -9,6 +9,8 @@ def create_blank_table(connector, table_name):
     create_table = f'''CREATE TABLE IF NOT EXISTS {table_name} (
     publication varchar(255),
     url varchar(255),
+    article_title varchar(255),
+    date DATE,
     is_uni_newspaper tinyint(1)
     )
     '''
