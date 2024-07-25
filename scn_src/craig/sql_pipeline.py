@@ -38,7 +38,7 @@ def big_function1(feeds,table_name='student_journalists23_24'):
     db_admin.add_df_to_table(table_name, df, if_exists='replace')
     
     
-def outer_big_function2():
+def outer_big_function2(chunk_size,llm,schema,table_name = 'student_journalists23_24'):
     #query the TABLE_NAME table and select all values where is_student is null and return these as a df 
     #df = db_admin.table_to_df(SELECT * FROM student_journalist23_24 WHERE 'is_student'=NULL)
     #big_function2(df,....)
