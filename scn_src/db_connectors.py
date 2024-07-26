@@ -87,8 +87,6 @@ class DBConnector:
 
 
 
-
-
    #     # Close the database connection
    # def load_data_to_sql(self, table_name, df, unique_keys = None):
    #     with self.engine.connect() as connection:
