@@ -50,8 +50,13 @@ def scraper_inner_loop(df,schema,tags_to_extract,table_name, llm=None):
         
 #create n-row chunks of student_journalists23_24 and append them to a list
 def chatgpt_to_sql(df,chunk_size,llm,schema,tags_to_extract,table_name = 'student_journalists23_24'):
-    list_df = [df[i:i+chunk_size] for i in range(0,df.shape[0],chunk_size)]
-    list_df.append(df[:-df.shape[0]%chunk_size])
+    if df.shape[0]%chunk_size != 0:
+        list_df = [df[i:i+chunk_size] for i in range(0,df.shape[0]-chunk_size, chunk_size)]
+        list_df.append(df[:-df.shape[0]%chunk_size])
+    else:
+        list_df = [df[i:i+chunk_size] for i in range(0,df.shape[0], chunk_size)]
+    breakpoint()
+    print(f"list of dataframe chunks: {list_df}")
 
     scraper_inner_loop_partial = partial(scraper_inner_loop,schema=schema,tags_to_extract=tags_to_extract,table_name=table_name)
     #scraper_inner_loop_partial = partial(scraper_inner_loop,llm=llm,schema=schema,tags_to_extract=tags_to_extract,table_name=table_name)

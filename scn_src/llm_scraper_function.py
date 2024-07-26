@@ -11,10 +11,11 @@ import pandas as pd
 #takes in a dataframe, runs scraper and returns desired dataframe
 def run_llm_scraper(df, llm, schema, tags_to_extract):
     urls = df["url"]
-    print(df)
-    df = extract_all_metadata(urls,llm,schema,tags_to_extract=tags_to_extract)
-    df = pd.DataFrame.from_dict(df,orient='columns')
-    print(f"columns: {df}")
-    df['is_student'] = df.is_author_student_journalist | df.is_article_university_collaboration 
+    url_list = urls.to_list() #craig-added line
+    #print(f'urls:{urls}')
+    extracted_urls = extract_all_metadata(url_list,llm,schema,tags_to_extract=tags_to_extract)
+    thing = pd.DataFrame.from_dict(extracted_urls,orient='columns')
+    #print(f'thing: {thing}')
+    thing['is_student'] = df.is_author_student_journalist | df.is_article_university_collaboration 
     df = df.rename(columns={"urls":"url", "news_article_author":"author", "is_student_reported":"is_student"})
     return df[["url", "author", "is_student"]]
