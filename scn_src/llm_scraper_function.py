@@ -16,6 +16,12 @@ def run_llm_scraper(df, llm, schema, tags_to_extract):
     extracted_urls = extract_all_metadata(url_list,llm,schema,tags_to_extract=tags_to_extract)
     thing = pd.DataFrame.from_dict(extracted_urls,orient='columns')
     #print(f'thing: {thing}')
-    thing['is_student'] = df.is_author_student_journalist | df.is_article_university_collaboration 
-    df = df.rename(columns={"urls":"url", "news_article_author":"author", "is_student_reported":"is_student"})
-    return df[["url", "author", "is_student"]]
+    student_class = []
+    for i in range(df.shape[0]):
+        student_class.append(thing["is_author_student_journalist"][i] | thing["is_article_university_collaboration"][i])
+    #df = df.rename(columns={"urls":"url", "news_article_author":"author", "is_student_reported":"is_student"})
+    final_dict = {"url": url_list,
+                  "author": thing["news_article_author"],
+                  "is_student": student_class}
+    print(f"final dict: {final_dict}")
+    return pd.DataFrame.from_dict(final_dict)
