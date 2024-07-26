@@ -9,14 +9,17 @@ import html
 """
 Function load_rss_feed takes a list of urls and finds all items
 """
-def load_rss_feed(urls):
+def load_rss_feed(urls, file):
     try:
-        loader = AsyncChromiumLoader(urls)
-        docs = loader.load()
-        decoded_content = html.unescape(docs[0].page_content)
-        bs = BeautifulSoup(decoded_content, "lxml-xml")
-        return bs.find_all("item")
-        #add a way to work with xml files
+        if file == False:
+            loader = AsyncChromiumLoader(urls)
+            docs = loader.load()
+            decoded_content = html.unescape(docs[0].page_content)
+            bs = BeautifulSoup(decoded_content, "lxml-xml")
+            return bs.find_all("item")
+        else:
+            #add a way to work with files here
+            print("files don't work yet!")
     except:
         return []
 
@@ -85,7 +88,9 @@ def parse_url(df_rss: pd.DataFrame):
     df = pd.DataFrame({"publication": news_sources,
                        "url" : rss,
                        "article_title" : title,
-                       "date" : date})
+                       "date" : date,
+                       "author": ["NULL" for i in range(len(news_sources))],
+                       "is_student": ["NULL" for i in range(len(news_sources))]})
     df = df.explode(["publication","url", "article_title", "date"])
     df = df.reset_index(drop = True)
 
@@ -105,7 +110,7 @@ def rss_url(news_source, link):
     pub_date = []
 
     #open link to rss feed
-    items = load_rss_feed([link])
+    items = load_rss_feed([link], False)
 
     #return none if no item tags exist in the rss feed
     if len(items) == 0:
