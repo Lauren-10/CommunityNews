@@ -38,9 +38,10 @@ def backfeed_to_sql(feeds,table_name='student_journalists23_24'):
     #db_admin.load_data_to_sql(table_name, df)
 
 #inner loop for the scraper, called with multiprocessing.pool
-def scraper_inner_loop(df,llm,schema,tags_to_extract,table_name):
+def scraper_inner_loop(df,schema,tags_to_extract,table_name, llm=None):
+    db_admin = MySQLConnector('wthomps3', permission = 'admin')
+    llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
     chatgpt_data_df = run_llm_scraper(df, llm, schema, tags_to_extract)
-    
     with db_admin.engine.connect() as connection:
         for i,row in chatgpt_data_df.iterrows():
             sql_query = f"UPDATE {table_name} SET author = '{row['author']}', is_student = {row['is_student']} WHERE url = '{row['url']}'"
@@ -51,7 +52,9 @@ def scraper_inner_loop(df,llm,schema,tags_to_extract,table_name):
 def chatgpt_to_sql(df,chunk_size,llm,schema,tags_to_extract,table_name = 'student_journalists23_24'):
     list_df = [df[i:i+chunk_size] for i in range(0,df.shape[0],chunk_size)]
     list_df.append(df[:-df.shape[0]%chunk_size])
-    scraper_inner_loop_partial = partial(scraper_inner_loop,llm=llm,schema=schema,tags_to_extract=tags_to_extract,table_name=table_name)
+
+    scraper_inner_loop_partial = partial(scraper_inner_loop,schema=schema,tags_to_extract=tags_to_extract,table_name=table_name)
+    #scraper_inner_loop_partial = partial(scraper_inner_loop,llm=llm,schema=schema,tags_to_extract=tags_to_extract,table_name=table_name)
     with  Pool(num_cpus) as pool: 
         pool.map(scraper_inner_loop_partial,list_df)
     
