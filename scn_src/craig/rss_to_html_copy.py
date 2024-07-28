@@ -31,6 +31,7 @@ and their rss feeds and writes to another csv article titles,
 date published, author name, and the news source it originated from
 """
 #convert input to data frame
+#df_rss: pd.DataFrame
 def parse_url(df_rss: pd.DataFrame):
     #empty lists to store data from scraping
     rss = []
@@ -42,7 +43,7 @@ def parse_url(df_rss: pd.DataFrame):
     #lines 41-44 convert the dataframe to a csv
     #to run the code with a casv, comment out the lines
     df_rss.to_csv("rss_urls.csv")
- 
+
     #open file of rss information
     with open("rss_urls.csv") as file: 
 
@@ -52,18 +53,15 @@ def parse_url(df_rss: pd.DataFrame):
         lines.pop(0)
 
         for line in lines:
-
+            
             #handles key error from rss_url function
             try:
                 #split line of text into news source and rss link
                 x = line.split(",")
-
                 #call rss_url function 
                 link = rss_url(x[1], x[2])
-
                 #Verify date and append text accordingly
                 test_dates = link["Publication Date"]
-
                 #counter for indexing purposes
                 i = 0
                 for pub_date in test_dates:
@@ -132,6 +130,5 @@ def rss_url(news_source, link):
         
 
 if __name__ == "__main__":
-    data = [["thehornettribune" , "https://asuhornettribune.com/feed/"], ["wvua23", "https://www.wvua23.com/feed/"], ["deltadigitalnewsservice" , "https://deltanewsservice.com/feed/"], ["KNKX", "https://www.knkx.org/news.rss"]]
-    df = pd.DataFrame(data)
+    df = pd.read_csv("rss_test_new.csv")
     print(parse_url(df))
