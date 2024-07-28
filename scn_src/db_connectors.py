@@ -21,7 +21,7 @@ class DBConnector:
         pass
 
     def make_connector(self):
-        pass 
+        pass
     
     def load_csv_to_sqlite(self, csv_path, table_name, if_exists="replace"):
         """
@@ -39,25 +39,36 @@ class DBConnector:
         df = pd.read_csv(csv_path)
         df.to_sql(table_name, engine, if_exists=if_exists, index=False)
         
-    def load_data_to_sql(
-        self,table_name, file_path=None, df=None, if_exists="replace", unique_keys=None
-    ):
-        """
-        Load data from a CSV, JSON, or Parquet file into an SQLite database table.
+    def load_data_to_sql(self, table_name, df, unique_keys = []):
+        with self.engine.connect() as connection:
+            # Get column names from DataFrame
+            columns = df.columns.tolist()
+            # Generate the column placeholders
+            columns_placeholder = ", ".join(columns)
+            # Generate the value placeholders
+            values_placeholder = ", ".join([f":{col}" for col in columns])
+            # Generate the update placeholders for ON DUPLICATE KEY UPDATE
+            update_placeholder = ", ".join([f"{col}=VALUES({col})" for col in columns if col not in unique_keys])
+            for index, row in df.iterrows():
+                # Convert the row to a dictionary of values
+                values = {col: row[col] for col in columns}
+                insert_query = f"""
+                INSERT INTO {table_name} ({columns_placeholder})
+                VALUES ({values_placeholder})
+                ON DUPLICATE KEY UPDATE {update_placeholder};
+                """
+                connection.execute(text(insert_query), parameters=values)
+            connection.commit()
 
-        :param db_path: Path to the SQLite database file.
-        :param table_name: Name of the table where the data will be inserted.
-        :param file_path: Path to the source file (CSV, JSON, or Parquet), provided instead of df
-        :param df: DataFrame to load, provided instead of file_path
-        :param if_exists: What to do if the table already exists - options are 'fail', 'replace', or 'append'. Default is 'replace'.
+    def add_df_to_table(self, table_name, df, if_exists='replace'):
+        with self.engine.connect() as connection:
+            df.to_sql(table_name, con=self.engine, if_exists=if_exists, index=False)
 
-        :return: None
-        """
-        if file_path != None:
-           df = self.load_df_from_file(file_path)
-        if (type(df) != type(None)) and (file_path != None):
-            ValueError("One of'file_path' or 'df' may be passed but not both")
-        df.to_sql(table_name, self.engine, if_exists=if_exists, index=False)
+    # def load_df_from_table(self, query):
+    #     with self.engine.connect() as connection:
+    #        df = pd.read_sql(query, con=self.engine, if_exists='append', index=False)
+    #     return df
+
 
     def query_db(self,query):
 
@@ -67,8 +78,12 @@ class DBConnector:
         # Execute a plaintext SQL query
         sql_query = text(query)
         result = session.execute(sql_query)
-        rows = result.fetchall()
-        return rows
+        try:
+            rows = result.fetchall()
+            return rows
+        except:
+            print("no result returned")
+        
 
 
 
@@ -176,5 +191,8 @@ class MySQLConnector(DBConnector):
         super().load_data_to_sql(table_name,df = df,unique_keys = unique_keys,if_exists = if_exists)
         print(f"Data has been loaded into {table_name} in database at {self.host}:{self.database}")
 
-        
+    def load_df_from_table(self, query):
+        with self.engine.connect() as connection:
+           df = pd.read_sql(query, con=self.engine)#, if_exists='append', index=False
+        return df
 
