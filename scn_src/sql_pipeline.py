@@ -1,5 +1,5 @@
 from scn_src.db_connectors import MySQLConnector
-from rss_to_html_copy import parse_url
+from scn_src.craig.rss_to_html_copy import parse_url
 from scn_src.llm_scraper_function import run_llm_scraper
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import text
@@ -57,7 +57,7 @@ def chatgpt_to_sql(df,chunk_size,llm,schema,tags_to_extract,table_name = 'studen
         list_df = [df[i:i+chunk_size] for i in range(0,df.shape[0], chunk_size)]
 
     scraper_inner_loop_partial = partial(scraper_inner_loop,schema=schema,tags_to_extract=tags_to_extract,table_name=table_name)
-    #scraper_inner_loop_partial = partial(scraper_inner_loop,llm=llm,schema=schema,tags_to_extract=tags_to_extract,table_name=table_name)
+    # scraper_inner_loop_partial = partial(scraper_inner_loop,llm=llm,schema=schema,tags_to_extract=tags_to_extract,table_name=table_name)
     with  Pool(num_cpus) as pool: 
         pool.map(scraper_inner_loop_partial,list_df)
     
@@ -65,5 +65,3 @@ def outer_chatgpt_to_sql(chunk_size,llm,schema,tags_to_extract,table_name = 'stu
     df = db_admin.load_df_from_table(f'SELECT * FROM {table_name} WHERE is_student IS NULL')
     chatgpt_to_sql(df,chunk_size,llm,schema,tags_to_extract,table_name)
     pass
-
-outer_chatgpt_to_sql(2,llm,schema,tags_to_extract,table_name='sj_test')
