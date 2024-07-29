@@ -10,15 +10,19 @@ import html
 Function load_rss_feed takes a list of urls and finds all items
 """
 def load_rss_feed(urls, file):
-    if file == False:
-        loader = AsyncChromiumLoader(urls)
-        docs = loader.load()
-        decoded_content = html.unescape(docs[0].page_content)
-        bs = BeautifulSoup(decoded_content, "lxml-xml")
-        return bs.find_all("item")
-    else:
-        #add a way to work with files here
-        print("files don't work yet!")
+    try:
+        if file == False:
+            loader = AsyncChromiumLoader(urls)
+            docs = loader.load()
+            decoded_content = html.unescape(docs[0].page_content)
+            bs = BeautifulSoup(decoded_content, "lxml-xml")
+            return bs.find_all("item")
+        else:
+            #add a way to work with files here
+            print("files don't work yet!")
+    except:
+        return []
+
 
 
 """
