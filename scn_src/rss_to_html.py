@@ -5,6 +5,7 @@ from datetime import datetime
 from langchain_community.document_loaders import AsyncChromiumLoader
 import xml.etree.ElementTree as ET
 import html
+import tqdm
 
 
 """
@@ -55,7 +56,7 @@ def parse_url(df_rss: pd.DataFrame):
         lines = [line.strip() for line in file]
         lines.pop(0)
     
-        for line in lines:
+        for line in tqdm.tqdm(lines):
             
             #handles key error from rss_url function
             
