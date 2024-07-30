@@ -17,7 +17,7 @@ def run_llm_scraper(df, llm, schema, tags_to_extract):
     thing = pd.DataFrame.from_dict(extracted_urls,orient='columns')
     thing[['is_author_student_journalist','is_article_university_collaboration']].fillna(False)#replace NaN with False
     student_class = []
-    for i in range(df.shape[0]):
+    for i in range(thing.shape[0]):
         try: 
             student_class.append(thing["is_author_student_journalist"][i] | thing["is_article_university_collaboration"][i])
         except TypeError as e: 
