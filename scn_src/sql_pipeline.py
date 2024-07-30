@@ -1,5 +1,5 @@
 from scn_src.db_connectors import MySQLConnector
-from rss_to_html_copy import parse_url
+from scn_src.rss_to_html import parse_url
 from scn_src.llm_scraper_function import run_llm_scraper
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import text
@@ -13,23 +13,24 @@ from functools import partial
 
 #count the number of cpu's 
 num_cpus = os.cpu_count()
+num_cpus = 1
 
-#this is the connector that will be used to write to the database
+##this is the connector that will be used to write to the database
 db_admin = MySQLConnector('wthomps3', permission = 'admin')
-
-#default arguments for ChatGPT portion
-llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
-schema = {
-    "properties": {
-        "news_article_author": {"type": "string"},
-        "is_author_student_college_student": {"type":"boolean"},
-        "is_author_student_journalist": {"type":"boolean"},
-        "is_article_university_collaboration": {"type":"boolean"}
-    },
-    "required": ["news_article_author",'is_author_student_journalist','is_article_university_collaboration','is_author_college_student'],
-}
-tags_to_extract = ['p','span','a','div']
-
+#
+##default arguments for ChatGPT portion
+#llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
+#schema = {
+#    "properties": {
+#        "news_article_author": {"type": "string"},
+#        "is_author_student_college_student": {"type":"boolean"},
+#        "is_author_student_journalist": {"type":"boolean"},
+#        "is_article_university_collaboration": {"type":"boolean"}
+#    },
+#    "required": ["news_article_author",'is_author_student_journalist','is_article_university_collaboration','is_author_college_student'],
+#}
+#tags_to_extract = ['p','span','a','div']
+#
 #input feeds, a df containing every RSS feed
 #scrape each RSS feed, create df of publication/url/title/date and NULL columns author/is_student, add to database
 def backfeed_to_sql(feeds,table_name='student_journalists23_24'): 
@@ -57,13 +58,13 @@ def chatgpt_to_sql(df,chunk_size,llm,schema,tags_to_extract,table_name = 'studen
         list_df = [df[i:i+chunk_size] for i in range(0,df.shape[0], chunk_size)]
 
     scraper_inner_loop_partial = partial(scraper_inner_loop,schema=schema,tags_to_extract=tags_to_extract,table_name=table_name)
-    #scraper_inner_loop_partial = partial(scraper_inner_loop,llm=llm,schema=schema,tags_to_extract=tags_to_extract,table_name=table_name)
+    # scraper_inner_loop_partial = partial(scraper_inner_loop,llm=llm,schema=schema,tags_to_extract=tags_to_extract,table_name=table_name)
     with  Pool(num_cpus) as pool: 
         pool.map(scraper_inner_loop_partial,list_df)
     
 def outer_chatgpt_to_sql(chunk_size,llm,schema,tags_to_extract,table_name = 'student_journalists23_24'): 
     df = db_admin.load_df_from_table(f'SELECT * FROM {table_name} WHERE is_student IS NULL')
+    df = df.sample(frac = 1).reset_index(drop = True)# stop the same webstie form being queried multiple times in a row to avoid IP bans
     chatgpt_to_sql(df,chunk_size,llm,schema,tags_to_extract,table_name)
-    pass
 
-outer_chatgpt_to_sql(2,llm,schema,tags_to_extract,table_name='sj_test')
+

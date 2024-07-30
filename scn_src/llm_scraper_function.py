@@ -17,12 +17,14 @@ def run_llm_scraper(df, llm, schema, tags_to_extract):
     thing = pd.DataFrame.from_dict(extracted_urls,orient='columns')
     #print(f'thing: {thing}')
     student_class = []
-    for i in range(thing.shape[0]):
-        student_class.append(list(thing["is_author_student_journalist"].values)[i] | (list(thing["is_article_university_collaboration"].values)[i]))
+    for i in range(df.shape[0]):
+        try: 
+            student_class.append(thing["is_author_student_journalist"][i] | thing["is_article_university_collaboration"][i])
+        except TypeError as e: 
+            print(e)
     #df = df.rename(columns={"urls":"url", "news_article_author":"author", "is_student_reported":"is_student"})
     final_dict = {"url": url_list,
                   "author": (list(thing["news_article_author"])),
                   "is_student": student_class}
     print(f"final dict: {final_dict}")
-    breakpoint()
-    return final_dict
+    return pd.DataFrame.from_dict(final_dict)
