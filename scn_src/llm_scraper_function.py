@@ -15,13 +15,14 @@ def run_llm_scraper(df, llm, schema, tags_to_extract):
     #print(f'urls:{urls}')
     extracted_urls = extract_all_metadata(url_list,llm,schema,tags_to_extract=tags_to_extract)
     thing = pd.DataFrame.from_dict(extracted_urls,orient='columns')
-    #print(f'thing: {thing}')
+    thing[['is_author_student_journalist','is_article_university_collaboration']].fillna(False)#replace NaN with False
     student_class = []
     for i in range(df.shape[0]):
         try: 
             student_class.append(thing["is_author_student_journalist"][i] | thing["is_article_university_collaboration"][i])
         except TypeError as e: 
             print(e)
+            print(thing)
     #df = df.rename(columns={"urls":"url", "news_article_author":"author", "is_student_reported":"is_student"})
     final_dict = {"url": url_list,
                   "author": thing["news_article_author"],

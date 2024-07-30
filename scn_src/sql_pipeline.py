@@ -12,7 +12,7 @@ import os
 from functools import partial
 
 #count the number of cpu's 
-num_cpus = os.cpu_count()
+#num_cpus = os.cpu_count()
 num_cpus = 1
 
 ##this is the connector that will be used to write to the database
@@ -59,6 +59,7 @@ def chatgpt_to_sql(df,chunk_size,llm,schema,tags_to_extract,table_name = 'studen
 
     scraper_inner_loop_partial = partial(scraper_inner_loop,schema=schema,tags_to_extract=tags_to_extract,table_name=table_name)
     # scraper_inner_loop_partial = partial(scraper_inner_loop,llm=llm,schema=schema,tags_to_extract=tags_to_extract,table_name=table_name)
+    print(num_cpus)
     with  Pool(num_cpus) as pool: 
         pool.map(scraper_inner_loop_partial,list_df)
     
