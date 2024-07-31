@@ -17,6 +17,8 @@ You can donate to support our students here
 a GroundTruth initiative. 
 Contact him at nbiesiada@voiceofoc.org or on Twitter @NBiesiada.
 """, "output": "False"},
+    {"input": "Melanie Mendez is a former student reporter at KUNR Public Radio.", "output": "False"},
+
 
 ]
 # This is a prompt template used to format each individual example.
@@ -36,13 +38,12 @@ final_prompt = ChatPromptTemplate.from_messages(
     [
         ("system", """You are an AI assistant that can classify articles
          as student written or reporter written, respond false if the author
-         is a professional journalist, true if the author is a university student"""),
+         is a professional journalist or former student, true if the author is a university student"""),
         few_shot_prompt,
         ("human", "{input}"),
     ]
 )
 chain = final_prompt | ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
 
-print(chain.invoke({"input": """Micah Johnston is with the Mercer Center for Collaborative Journalism.
-                     A senior at Mercer he is majoring in journalism and media studies. 
-                    He's worked for The Cluster and is a former intern with GPB News."""}))
+print(chain.invoke({"input": """This story is jointly published by nonprofits Amplify Utah and The Salt Lake Tribune,
+                     in collaboration with the University of Utah, to elevate diverse perspectives in local media through student journalism."""}))
