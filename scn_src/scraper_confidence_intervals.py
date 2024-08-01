@@ -13,6 +13,7 @@ class Article(BaseModel):
             In the event that two or more authors appear, format the output as so:
             "Name and Name and Name, boolean". if one author on the article is a student, consider
             that article to be student written""")
+
 if __name__ =="__main__":
     llm = ChatOpenAI(temperature=0, model="gpt-4o-mini")
     #schema = {
