@@ -9,17 +9,17 @@ from scn_src.lang_chain_utils import load_docs,extract_metadata,extract_all_meta
 import pandas as pd
 
 #takes in a dataframe, runs scraper and returns desired dataframe
-def run_llm_scraper(df, llm, schema, tags_to_extract):
+def run_llm_scraper(df, llm, prompts, schema, tags_to_extract):
     urls = df["urls"]
     url_list = urls.to_list() #craig-added line
     #print(f'urls:{urls}')
-    extracted_urls = extract_all_metadata(url_list,llm,schema,tags_to_extract=tags_to_extract)
+    extracted_urls = extract_all_metadata(url_list,llm, prompts,schema,tags_to_extract=tags_to_extract)
     thing = pd.DataFrame.from_dict(extracted_urls,orient='columns')
     #print(f'thing: {thing}')
     student_class = []
     for i in range(df.shape[0]):
         try: 
-            student_class.append(thing["is_author_student_journalist"][i] | thing["is_article_university_collaboration"][i])
+            student_class.append(thing["is_author_student_journalist"][i])
         except TypeError as e: 
             print(e)
     #df = df.rename(columns={"urls":"url", "news_article_author":"author", "is_student_reported":"is_student"})

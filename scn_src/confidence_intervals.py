@@ -97,13 +97,14 @@ def confidence_interval_f1(f1_values):
     return confidence_interval_f1
 
 
-def auto_precision_recall(num_chunks, llm, schema, tags_to_extract):
+def auto_precision_recall(num_chunks, llm, prompts, schema, tags_to_extract):
     precision_values = []
     recall_values = []
     df_ground_truth = pd.read_csv('ground_truth_df.csv')
     df_ground_truth = df_ground_truth.sample(10)
     #df_ground_truth = df_ground_truth.iloc[0:1].reset_index()
-    df_scraper = run_llm_scraper(df_ground_truth, llm, schema, tags_to_extract)
+    breakpoint()
+    df_scraper = run_llm_scraper(df_ground_truth, llm, prompts, schema, tags_to_extract)
     for _ in range(num_chunks):
         precision, recall = precision_recall(list(df_scraper["is_student"]) , list(df_ground_truth["is_student_reported"]))
         precision_values.append(precision)
