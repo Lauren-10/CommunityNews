@@ -43,6 +43,7 @@ def scraper_inner_loop(df,schema,tags_to_extract,table_name, llm=None):
     db_admin = MySQLConnector('wthomps3', permission = 'admin')
     llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
     chatgpt_data_df = run_llm_scraper(df, llm, schema, tags_to_extract)
+    chatgpt_data_df.author = chatgpt_data_df.author.str.replace(r"[\"\']","")
     with db_admin.engine.connect() as connection:
         for i,row in chatgpt_data_df.iterrows():
             sql_query = f"UPDATE {table_name} SET author = '{row['author']}', is_student = {row['is_student']} WHERE url = '{row['url']}'"
@@ -59,11 +60,14 @@ def chatgpt_to_sql(df,chunk_size,llm,schema,tags_to_extract,table_name = 'studen
 
     scraper_inner_loop_partial = partial(scraper_inner_loop,schema=schema,tags_to_extract=tags_to_extract,table_name=table_name)
     # scraper_inner_loop_partial = partial(scraper_inner_loop,llm=llm,schema=schema,tags_to_extract=tags_to_extract,table_name=table_name)
-    print(num_cpus)
-    with  Pool(num_cpus) as pool: 
-        pool.map(scraper_inner_loop_partial,list_df)
     
-def outer_chatgpt_to_sql(chunk_size,llm,schema,tags_to_extract,table_name = 'student_journalists23_24'): 
+    for df in list_df:
+        scraper_inner_loop(df,schema,tags_to_extract,table_name)
+    #with  Pool(num_cpus) as pool: 
+        #pool.map(scraper_inner_loop_partial,list_df)
+
+"""ADD PROMPT PARAM TO INPUTS/OUTPUTS CRAIG"""
+def outer_chatgpt_to_sql(chunk_size,llm,schema,tags_to_extract,table_name = 'student_journalists23_24'):
     df = db_admin.load_df_from_table(f'SELECT * FROM {table_name} WHERE is_student IS NULL')
     df = df.sample(frac = 1).reset_index(drop = True)# stop the same webstie form being queried multiple times in a row to avoid IP bans
     chatgpt_to_sql(df,chunk_size,llm,schema,tags_to_extract,table_name)
