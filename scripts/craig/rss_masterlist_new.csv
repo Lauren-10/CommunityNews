@@ -53,7 +53,6 @@ thescope,https://thescopeboston.org/feed/,0
 capitalnewsservice,https://cnsmaryland.org/rss,0
 capitalnewsservice,https://news.jrn.msu.edu/feed/,0
 greatlakesecho,https://greatlakesecho.org/feed/,0
-pioneerpress,https://www.twincities.com/rss,0
 thekansascitystar,https://feeds.mcclatchy.com/kansascity/sections/news/local/stories,0
 projectoptimist,https://www.projectoptimist.us/rss/,0
 columbiamissourian,https://www.columbiamissourian.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc,0
@@ -185,7 +184,6 @@ postsearchlight,https://www.thepostsearchlight.com/rss,0
 thestatesboroherald,https://www.statesboroherald.com/rss,0
 thetimescourier,https://www.timescourier.com/rss.xml,0
 tribune,https://www.tribune-georgian.com/rss.xml,0
-valleytimesnews,https://www.valleytimes-news.com/rss,0
 westhawaiitoday,https://www.westhawaiitoday.com/rss,0
 chicagosuntimes,https://chicago.suntimes.com/feed,0
 dailyherald,https://www.dailyherald.com/rss,0
@@ -262,7 +260,7 @@ theleelanauenterprise,https://www.leelanaunews.com/rss,0
 albertleatribune,https://www.albertleatribune.com/rss,0
 austindailyherald,https://www.austindailyherald.com/rss,0
 thebrainerddailydispatch,https://www.brainerddispatch.com/rss,0
-countybulletin,https://www.swcbulletin.com/rss,0
+!!!countybulletin,https://www.swcbulletin.com/rss,0
 dailyglobe,https://www.dglobe.com/rss,0
 detroitlakestribune,https://www.dl-online.com/rss,0
 duluthnewstribune,https://www.duluthnewstribune.com/rss,0
@@ -287,14 +285,12 @@ picayuneitem,http://www.picayuneitem.com/rss,0
 vicksburgpost,https://www.vicksburgpost.com/rss,0
 winstoncountyjournal,http://www.winstoncountyjournal.com/rss.xml,0
 boonvilledailynews,https://www.boonvilledailynews.com/rss,0
-thecarthagepress,https://www.neoshodailynews.com/rss,0
+!!!thecarthagepress,https://www.neoshodailynews.com/rss,0
 constitutiontribune,https://www.chillicothenews.com/rss,0
-dailyguide,https://www.therolladailynews.com/rss,0
 kirksvilledailyexpress&amp;news,https://www.kirksvilledailyexpress.com/rss,0
 moberlymonitorindex,https://www.moberlymonitor.com/rss,0
 neoshodailynews,https://www.neoshodailynews.com/rss,0
 republicanclipper,https://www.bethanyclipper.com/rss,0
-rolladailynews,https://www.therolladailynews.com/rss,0
 thebitterrootstar,https://bitterrootstar.com/rss,0
 thehavredailynews,https://www.havredailynews.com/rss,0
 seeleyswanpathfinder,https://www.seeleylake.com/rss,0
@@ -355,14 +351,12 @@ yellowspringsnews,https://ysnews.com/rss,0
 thejournalrecord,https://journalrecord.com/rss,0
 theponcacitynews,https://www.poncacitynews.com/rss.xml,0
 cascadebusinessnews,http://cascadebusnews.com/rss,0
-eugeneweekly,http://www.eugeneweekly.com/rss,0
 keizertimes,https://www.keizertimes.com/feed,0
 dailycourier,https://www.dailycourier.com/rss,0
 thefultoncountynews,https://www.fultoncountynews.com/rss,0
 leadertimes,https://www.leadertimes.com/rss,0
-murrysvillestar,https://triblive.com/rss,0
 philadelphiaweekly,http://www.philadelphiaweekly.com/rss,0
-pittsburghtribunereview,https://triblive.com/rss,0
+pittsburghtribunereview,https://triblive.com/category/local/rss,0
 rocketcourier,https://www.rocket-courier.com/rss,0
 newportthisweek,https://www.newportthisweek.com/rss,0
 providencebusinessnews,https://pbn.com/rss,0
@@ -420,7 +414,6 @@ seattleweekly,https://www.seattleweekly.com/rss,0
 sequimgazette,http://www.sequimgazette.com/rss,0
 snoqualmievalleyrecord,http://www.valleyrecord.com/rss,0
 southwhidbeyrecord,http://www.southwhidbeyrecord.com/rss,0
-starline,https://www.grandcoulee.com/rss,0
 vashonmauryislandbeachcomber,http://www.vashonbeachcomber.com/rss,0
 vancouverbusinessjournal,https://www.vbjusa.com/rss,0
 whidbeynewstimes,http://www.whidbeynewstimes.com/rss,0
@@ -431,5 +424,5 @@ mountainmessenger,https://mountainmessenger.com/rss,0
 wisconsinnewspaperassociation,https://www.wnanews.com/rss,0
 thedailyreporter,https://dailyreporter.com/rss,0
 thereview,https://www.plymouth-review.com/rss,0
-southwashingtoncountybulletin,https://www.swcbulletin.com/rss,0
+!!!southwashingtoncountybulletin,https://www.swcbulletin.com/rss,0
 standardpress,http://myracinecounty.com/rss,0
