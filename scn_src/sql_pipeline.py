@@ -69,4 +69,4 @@ def chatgpt_to_sql(df,chunk_size,llm, prompt,schema,tags_to_extract,table_name =
 def outer_chatgpt_to_sql(chunk_size,llm,schema,prompts,tags_to_extract,table_name = 'student_journalists23_24v2'):
     df = db_admin.load_df_from_table(f'SELECT * FROM {table_name} WHERE is_student IS NULL')
     df = df.sample(frac = 1).reset_index(drop = True)# stop the same webstie form being queried multiple times in a row to avoid IP bans
-    chatgpt_to_sql(df,chunk_size,llm,schema,prompts,tags_to_extract,table_name)
+    chatgpt_to_sql(df,chunk_size,llm,prompts,schema,tags_to_extract,table_name)

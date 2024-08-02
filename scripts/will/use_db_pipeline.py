@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
     #df = db_admin.load_df_from_table("SELECT * FROM rss_masterlist")
     #backfeed_to_sql(df)
-    outer_chatgpt_to_sql(5,llm,prompt(),schema,tags_to_extract)
+    outer_chatgpt_to_sql(5,llm,schema,prompt(),tags_to_extract)
 
     
 
