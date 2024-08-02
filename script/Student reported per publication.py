@@ -12,10 +12,11 @@ dataframe['non_student_articles'] = dataframe['num_total_articles'] - dataframe[
 #truncating string
 dataframe['publication'] = dataframe['publication'].apply(lambda x : x[:20])
 
+#change the dataframe to sort by total aricles or total ratio
 dataframe = dataframe.sort_values(by='student_to_total_ratio', ascending=False)
-
 #dataframe = dataframe.sort_values(by='num_total_articles', ascending=False)
-breakpoint()
+
+
 #number of barplots to display
 dataframe = dataframe[62:77]
 # dataframe = dataframe[181:187]
