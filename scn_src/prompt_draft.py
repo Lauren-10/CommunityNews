@@ -53,7 +53,6 @@ def prompt():
             "Name and Name and Name, boolean". if one author on the article is a student, consider
             that article to be student written
             """),
-            few_shot_prompt,
             ("human", "{input}"),
         ]
     )
