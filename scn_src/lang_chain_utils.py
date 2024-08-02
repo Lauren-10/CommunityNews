@@ -53,10 +53,12 @@ def extract_all_metadata(urls,llm,prompt,schema,tags_to_extract = ['p','span','a
         metadata["urls"] = urls[i]
         extracted_content_list.append(metadata)
         #extracted_content_list.append(extract_metadata(doc,schema,llm))
-    breakpoint()
-    is_student = []
+    #breakpoint()
+    #is_student = []
+    """
     for i in extracted_content_list:
        is_student.append(i["is_article_university_collaboration"] or i["is_author_student_journalist"])
+    """
     return extracted_content_list
     
     

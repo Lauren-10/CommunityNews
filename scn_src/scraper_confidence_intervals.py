@@ -1,6 +1,6 @@
 from langchain_openai import ChatOpenAI
 from scn_src.confidence_intervals import auto_precision_recall
-from prompt_draft import prompt
+from scn_src.prompt_draft import prompt
 from typing import Optional
 from langchain_core.pydantic_v1 import BaseModel, Field
 

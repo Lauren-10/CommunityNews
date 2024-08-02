@@ -39,10 +39,10 @@ def backfeed_to_sql(feeds,table_name='student_journalists23_24'):
     #db_admin.load_data_to_sql(table_name, df)
 
 #inner loop for the scraper, called with multiprocessing.pool
-def scraper_inner_loop(df,schema,tags_to_extract,table_name, llm=None):
+def scraper_inner_loop(df,llm,schema,prompt,tags_to_extract,table_name):
     db_admin = MySQLConnector('wthomps3', permission = 'admin')
-    llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
-    chatgpt_data_df = run_llm_scraper(df, llm, schema, tags_to_extract)
+    #llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
+    chatgpt_data_df = run_llm_scraper(df, llm, prompt,schema, tags_to_extract)
     chatgpt_data_df.author = chatgpt_data_df.author.str.replace(r"[\"\']","")
     with db_admin.engine.connect() as connection:
         for i,row in chatgpt_data_df.iterrows():
@@ -51,25 +51,25 @@ def scraper_inner_loop(df,schema,tags_to_extract,table_name, llm=None):
         connection.commit()
         
 #create n-row chunks of student_journalists23_24 and append them to a list
-def chatgpt_to_sql(df,chunk_size,llm,schema,tags_to_extract,table_name = 'student_journalists23_24'):
+def chatgpt_to_sql(df,chunk_size,llm, prompt, schema,tags_to_extract,table_name = 'student_journalists23_24'):
     if df.shape[0]%chunk_size != 0:
         list_df = [df[i:i+chunk_size] for i in range(0,df.shape[0]-chunk_size, chunk_size)]
         list_df.append(df[:-df.shape[0]%chunk_size])
     else:
         list_df = [df[i:i+chunk_size] for i in range(0,df.shape[0], chunk_size)]
 
-    scraper_inner_loop_partial = partial(scraper_inner_loop,schema=schema,tags_to_extract=tags_to_extract,table_name=table_name)
+    scraper_inner_loop_partial = partial(scraper_inner_loop,llm=llm,schema=schema,tags_to_extract=tags_to_extract,table_name=table_name,)
     # scraper_inner_loop_partial = partial(scraper_inner_loop,llm=llm,schema=schema,tags_to_extract=tags_to_extract,table_name=table_name)
     
     for df in list_df:
-        scraper_inner_loop(df,schema,tags_to_extract,table_name)
+        scraper_inner_loop(df,llm,schema,prompt,tags_to_extract,table_name)
     #with  Pool(num_cpus) as pool: 
         #pool.map(scraper_inner_loop_partial,list_df)
 
 """ADD PROMPT PARAM TO INPUTS/OUTPUTS CRAIG"""
-def outer_chatgpt_to_sql(chunk_size,llm,schema,tags_to_extract,table_name = 'student_journalists23_24'):
+def outer_chatgpt_to_sql(chunk_size,llm, prompt, schema,tags_to_extract,table_name = 'student_journalists23_24v2'):
     df = db_admin.load_df_from_table(f'SELECT * FROM {table_name} WHERE is_student IS NULL')
     df = df.sample(frac = 1).reset_index(drop = True)# stop the same webstie form being queried multiple times in a row to avoid IP bans
-    chatgpt_to_sql(df,chunk_size,llm,schema,tags_to_extract,table_name)
+    chatgpt_to_sql(df,chunk_size,llm,prompt,schema,tags_to_extract,table_name)
 
 
