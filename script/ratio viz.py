@@ -12,7 +12,7 @@ def ratio_plot(dataframe, ratio_function):
     dataframe['publication'] = dataframe['publication'].apply(lambda x : x[:20])
 
     #number of barplots to display
-    modified_dataframe = dataframe[25:50]
+    modified_dataframe = dataframe[10:30]
     return ratio_function(modified_dataframe)
 
 #function to find the student-to-total ratio and sort by highest to lowest 
@@ -31,7 +31,7 @@ def ratio_highest_to_lowest(modified_dataframe):
     #setting lables 
     plt.xlabel('Publications')
     plt.ylabel('Ratio')
-    plt.title('Ratio of Student to Total Articles per Publication \n Sorted by Highest to Lowest')
+    plt.title('Ratio of Student to Total Articles per Publication \n Descending')
 
     #setting limits
     ax.set_ylim(0,1)

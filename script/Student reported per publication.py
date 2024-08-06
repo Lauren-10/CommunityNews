@@ -2,7 +2,7 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-dataframe = pd.read_csv('ratio.csv')
+dataframe = pd.read_csv('Ratio.csv')
 
 #main function
 def student_per_publication(dataframe, plot_function):
@@ -20,7 +20,7 @@ def student_per_publication(dataframe, plot_function):
 #function to find student to total ratio and sort by ratio descending
 def student_to_total_sort_ratio(dataframe):
     dataframe = dataframe.sort_values(by='student_to_total_ratio', ascending=False)
-    dataframe = dataframe[40:55]
+    dataframe = dataframe[3:26]
     plt.figure(figsize=(10,6))
     #whiteboard
     fig, ax = plt.subplots()
@@ -29,7 +29,7 @@ def student_to_total_sort_ratio(dataframe):
     sns.barplot(x='publication', y='non_student_articles', data=dataframe, ax=ax, color='yellow', label='Non-student Articles', bottom=dataframe['num_student_articles'])
 
     #rotating x-axis
-    plt.xticks(rotation=70)
+    plt.xticks(rotation=80)
 
     #setting lables 
     plt.xlabel('Publication')
@@ -58,7 +58,7 @@ def student_to_total_sort_totalarticles(dataframe):
     #setting lables 
     plt.xlabel('Publication')
     plt.ylabel('total number of articles')
-    plt.title('Student Reporting and Non-Reporting per Publication Sorted by Total aricles')
+    plt.title('Student Reporting and Non-Reporting per Publication \n Sorted by Total aricles')
 
     #setting limits
     plt.ylim()
@@ -69,4 +69,4 @@ def student_to_total_sort_totalarticles(dataframe):
     return plt.show()
 
 #call funtion
-student_per_publication(dataframe, student_to_total_sort_ratio)
+student_per_publication(dataframe, student_to_total_sort_totalarticles)
