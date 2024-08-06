@@ -4,13 +4,14 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 dataframe = pd.read_csv('timeline.csv')
 
-#modify the dataframe to plot according to dates
+#main function 
 def timeline_plot(dataframe, plot_function):
     dataframe['date'] = pd.to_datetime(dataframe['date'])
     dataframe['month_and_year'] = dataframe['date'].dt.strftime("%m/%Y")
     dataframe = dataframe.groupby('month_and_year', sort = False).count()
     return plot_function(dataframe)
 
+#function to show timeline of student and non-student articles
 def timeline_barplot(dataframe):
     plt.figure()
     #whiteboard
