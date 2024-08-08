@@ -26,7 +26,7 @@ def student_to_total_sort_ratio(dataframe):
     fig, ax = plt.subplots()
     #creating top and bottom barplot
     sns.barplot(x='publication', y='num_student_articles', data=dataframe, ax=ax, color='purple', label='Student Articles')
-    sns.barplot(x='publication', y='non_student_articles', data=dataframe, ax=ax, color='yellow', label='Non-student Articles', bottom=dataframe['num_student_articles'])
+    sns.barplot(x='publication', y='non_student_articles', data=dataframe, ax=ax, color='orange', label='Non-student Articles', bottom=dataframe['num_student_articles'])
 
     #rotating x-axis
     plt.xticks(rotation=80)
@@ -34,7 +34,7 @@ def student_to_total_sort_ratio(dataframe):
     #setting lables 
     plt.xlabel('Publication')
     plt.ylabel('total number of articles')
-    plt.title('Student Reporting and Non-Reporting per Publication \n Sorted by Ratio Student Reporting : Non-Student Reporting')
+    plt.title('Student Reporting and Non-Reporting per Publication \n Sorted by Ratio (Student Reporting : Non-Student Reporting)')
 
     #adding legend 
     plt.legend()
@@ -69,4 +69,4 @@ def student_to_total_sort_totalarticles(dataframe):
     return plt.show()
 
 #call funtion
-student_per_publication(dataframe, student_to_total_sort_totalarticles)
+student_per_publication(dataframe, student_to_total_sort_ratio)
