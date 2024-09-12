@@ -5,7 +5,7 @@ from datetime import datetime
 from langchain_community.document_loaders import AsyncChromiumLoader
 import xml.etree.ElementTree as ET
 import html
-
+import news-fetch
 
 """
 Function load_rss_feed takes a list of urls and finds all items

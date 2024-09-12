@@ -1,6 +1,6 @@
 import os
 from urllib.parse import quote
-
+from bs4 import BeautifulSoup
 """
 Plan of attack:
 1: 
@@ -21,9 +21,10 @@ def backfeed_loader(num_snaps: int, rss_feed: str):
 
     #URL Format: https://backfeed.app/KEY/OPTIONS/URL
     xml_doc = f"https://backfeed.app/{BACKFEED_API_KEY}/s:{num_snaps}/{rss_feed}"
-    xml_doc_encode = quote(xml_doc, safe='')
+    soup = BeautifulSoup(xml_doc, features="xml")
+    
     #assert isinstance(xml_doc,str)
-    print(xml_doc_encode)
+    
     #Pull doc and retrieve items (element tree?)
 
     #establish file path
