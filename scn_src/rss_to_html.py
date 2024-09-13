@@ -5,7 +5,7 @@ from datetime import datetime
 from langchain_community.document_loaders import AsyncChromiumLoader
 import xml.etree.ElementTree as ET
 import html
-import news-fetch
+from newsfetch.google import google_search
 
 """
 Function load_rss_feed takes a list of urls and finds all items
@@ -24,6 +24,13 @@ def load_rss_feed(urls, file):
 
 
 
+"""
+function implementing news fetch and 
+returning urls
+"""
+def use_news_fetch(keyword: string, homepage: string):
+    articles = google_search(keyword, homepage)
+    return articles.urls
 """
 Add specific try and except blocks
 """
@@ -142,5 +149,4 @@ def rss_url(news_source, link):
         
 
 if __name__ == "__main__":
-    df = pd.read_csv("rss_masterlist.csv")
-    parse_url(df).to_csv("final_urls.csv")
+    print(use_news_fetch("legislature", "https://vtcommunitynews.org/"))
