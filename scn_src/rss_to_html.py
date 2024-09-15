@@ -28,12 +28,10 @@ def load_rss_feed(urls, file):
 function implementing news fetch and 
 returning urls
 """
-def use_news_fetch(keyword: string, homepage: string):
+def use_news_please(keyword: string, homepage: string):
     articles = google_search(keyword, homepage)
     return articles.urls
-"""
-Add specific try and except blocks
-"""
+
 
 """
 parse_url takes a data frame filled with news sources
