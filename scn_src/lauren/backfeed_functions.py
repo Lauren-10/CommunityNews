@@ -1,12 +1,13 @@
 import os
 from urllib.parse import quote
 from bs4 import BeautifulSoup
+import requests
 """
-Plan of attack:
-1: 
-- Load the urls as the xml documents they are
-- establish a path for each documents
-- place these paths into a glob object
+Notes:
+run the command "source ~/.bashrc" before 
+using this function
+it makes everyone's lives easier
+including my own
 """
 
 """
@@ -21,14 +22,20 @@ def backfeed_loader(num_snaps: int, rss_feed: str):
 
     #URL Format: https://backfeed.app/KEY/OPTIONS/URL
     xml_doc = f"https://backfeed.app/{BACKFEED_API_KEY}/s:{num_snaps}/{rss_feed}"
-    soup = BeautifulSoup(xml_doc, features="xml")
-    
-    #assert isinstance(xml_doc,str)
+
+    response = requests.get(xml_doc)
+    soup = BeautifulSoup(response.content, features="xml")
     
     #Pull doc and retrieve items (element tree?)
-
+    #make document name
+    doc_name = rss_feed.split("/")[2].split(".")[0] + ".xml"
+    doc_path = "backfeed_files"
+    file_path = os.path.join(doc_path, doc_name) 
+    with open(file_path, 'w') as f:
+        f.write(soup.prettify())
     #establish file path
 
 
+
 if __name__ == "__main__":
-    backfeed_loader(100, "https://zunews.com/feed/")
+    backfeed_loader(5, "https://zunews.com/feed/")
