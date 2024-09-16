@@ -1,6 +1,6 @@
 from langchain_openai import ChatOpenAI
 from scn_src.confidence_intervals import auto_precision_recall
-from prompt_draft import prompt
+from scn_src.prompt_draft import prompt
 from typing import Optional
 from langchain_core.pydantic_v1 import BaseModel, Field
 
@@ -13,6 +13,7 @@ class Article(BaseModel):
             In the event that two or more authors appear, format the output as so:
             "Name and Name and Name, boolean". if one author on the article is a student, consider
             that article to be student written""")
+
 if __name__ =="__main__":
     llm = ChatOpenAI(temperature=0, model="gpt-4o-mini")
     #schema = {
