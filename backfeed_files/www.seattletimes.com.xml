@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE HTML>
+<html lang="en-US">
+ <head>
+  <meta charset="UTF-8">
+   <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>
+     Backfeed – the memorable rss feed proxy
+    </title>
+    <meta content="Backfeed proxies RSS feeds concatenated with historical content from archive.org" name="description"/>
+    <style>
+     html,body,div,form,label,p,ol,ul,dl,dt,dd,h1,h2,input{margin:0;padding:0;}
+    img{border:0;}
+    html{font-family:Inter,Roboto,'Helvetica Neue','Arial Nova','Nimbus Sans',Arial,sans-serif;font-size:18px;}
+    body{max-width:630px;margin:20px auto;padding:0 5%;}
+    a{color:#398a9e;text-decoration:none;}
+    h1{font-size:1.65rem;margin:1.5em 0;}
+    h2{font-size:1.3rem;margin:1.5em 0 .5em 0;}
+    p,ol,ul,form,dd{margin-bottom:1rem;line-height:1.5;}
+    li{margin-left:2rem;}
+    .backfeedurl{font-weight:bold;background-color:#398a9e;color:#fff;padding:.1em .4em;display:block;overflow:auto;overflow-wrap:break-word;}
+    textarea#backfeedxml{width:100%;font-family:monospace;}
+    dt{font-weight:600;}
+    .sc-msg{z-index:2000000000;max-width:36em;margin:1em 0;padding:.3em .6em;border:1px solid #ddd;background:#fafafa;}
+    .sc-msg-success{color:#1d3032;}
+    .sc-msg-notice{color:#e63e10;}
+    .sc-msg-warning,
+    .sc-msg-error{color:#750512;}
+    .sc-msg &gt; .sc-msg-success,
+    .sc-msg &gt; .sc-msg-notice,
+    .sc-msg &gt; .sc-msg-warning,
+    .sc-msg &gt; .sc-msg-error{background:#fafafa;border:none;padding:0;margin:.5em 0;}
+    .sc-msg .close{display:none;}
+    header{width:100%;margin-top:-375px;transform:rotate(180deg);}
+    #home header{width:100%;margin-top:50px;transform:none;}
+    header img{width:100%;aspect-ratio:945 / 694;}
+    footer{font-size:.8rem;}
+    hr{margin:1.5rem 0;border:none;height:1px;background-color:#DDD;}
+    form{margin:2rem 0;white-space:nowrap;}
+    .form-row{margin:.5rem 0;}
+    label{position:relative;white-space:normal;display:inline-block;}
+    input{font-size:1rem;padding:.5rem;border:1px solid #398a9e;box-sizing:border-box;}
+    summary{color:#555;margin:.25rem 0;cursor:default;}
+    details{margin-top:.5rem;}
+    details .form-row{line-height:1.8;margin-left:1rem;margin-right:1rem;}
+    details input{padding:.2rem .5rem;}
+    details input:not([type='checkbox']){width:5em;}
+    .thirds &gt; *{width:33%;}
+    input[type="submit"]{background:#398a9e;color:#fff;}
+    input[type="submit"][name="backfeedit"]{white-space:normal;word-wrap:break-word;}
+    [data-tooltip]::before{content:attr(data-tooltip);position:absolute;top:calc(100% + 10px);left:0;padding:6px 10px;border-radius:6px;background:#444;font-size:0.8rem;color:#eee;text-align:center;box-sizing:border-box;visibility:hidden;opacity:0;transition:visibility 0s,opacity 0.1s ease-in-out;z-index:2;}
+    [data-tooltip]::after{content:"";position:absolute;top:calc(100% - 10px);left:50%;margin-bottom:10px;border:10px solid #f00;border-color:transparent transparent #444 transparent;box-sizing:border-box;visibility:hidden;opacity:0;transition:visibility 0s,opacity 0.1s ease-in-out;z-index:2;}
+    [data-tooltip]:hover::before,[data-tooltip]:hover::after{visibility:visible;opacity:1;}
+    .subtitle{font-weight:400;}
+    code {background-color: #f5f2f0;color: #1b1b1b;padding: 0.1em 0.25em;font-size: 0.8em;border-radius: 2px;vertical-align: 3%;font-family: SFMono-Regular, Menlo, monospace;}
+    .red {color: #900;}
+    .blue {color: #44f;}
+    .green {color: #490;}
+    @media (max-width: 530px) {
+        #createfeed label,#createfeed input:not([type='checkbox']){display:block;width:100%;margin-bottom:6px;}
+        .hide-for-small{display:none;}
+        .subtitle{display:block;margin-top:.3em;font-size:1.4rem;}
+    }
+    @media (min-width: 531px) {
+        .hide-for-large{display:none;}
+    }
+    </style>
+    <script>
+     document.addEventListener('DOMContentLoaded', function () {
+        var createfeedform = document.getElementById('createfeed');
+        // Index page.
+        if (createfeedform) {
+            createfeedform.addEventListener('submit', function(e) {
+                var elms = this.elements;
+                if (!elms.key.value  !elms.url.value) {
+                    alert("Please enter both an access key and the feed URL.");
+                    e.preventDefault();
+                } else if (!elms.key.value) {
+                    alert("Please enter an access key. If you don’t have an access key, please contact me.");
+                    e.preventDefault();
+                } else if (!elms.url.value) {
+                    alert("Please enter a feed URL.");
+                    e.preventDefault();
+                } else {
+                    elms.backfeedit.disabled = true;
+                    elms.backfeedit.value = 'Please wait…';
+                    setTimeout(function () {elms.backfeedit.value = 'A small feed takes minutes…';}, 2e3);
+                    setTimeout(function () {elms.backfeedit.value = 'A large feed takes about an hour…';}, 6e3);
+                    setTimeout(function () {elms.backfeedit.value = 'If the page dies, try again later…';}, 10e3);
+                    setTimeout(function () {elms.backfeedit.value = 'It’s only slow the first time…';}, 14e3);
+                    setTimeout(function () {elms.backfeedit.value = 'Let it process complete before trying again…';}, 17e3);
+                    setTimeout(function () {elms.backfeedit.value = 'Just a little longer…';}, 21e3);
+                    setTimeout(function () {elms.backfeedit.value = 'Patiently waiting…';}, 23e3);
+                    setTimeout(function () {elms.backfeedit.value = 'Still crunching…';}, 25e3);
+                    setTimeout(function () {elms.backfeedit.value = 'Really, any minute now…';}, 28e3);
+                    setTimeout(function () {elms.backfeedit.value = 'Almost done…';}, 31e3);
+                    setTimeout(function () {elms.backfeedit.value = 'Almost done (just kidding)…';}, 34e3);
+                    setTimeout(function () {elms.backfeedit.value = 'Go make some coffee…';}, 37e3);
+                    setTimeout(function () {elms.backfeedit.value = 'This really might take awhile…';}, 40e3);
+                    setTimeout(function () {elms.backfeedit.value = 'Please wait…';}, 46e3);
+                    setTimeout(function () {
+                        elms.backfeedit.disabled = false;
+                        elms.backfeedit.value = 'Backfeed it!';
+                    }, 90000);
+                    return (typeof submitted == 'undefined') ? (submitted = true) : !submitted;
+                }
+            });
+        }
+    });
+    </script>
+   </meta>
+   <body id="home">
+    <header>
+     <img alt="logo" src="/i/header.jpg"/>
+     <h1>
+      <a href="/">
+       Backfeed
+      </a>
+      <span class="subtitle">
+       <span class="hide-for-small">
+        –
+       </span>
+       the memorable rss feed proxy
+      </span>
+     </h1>
+     <div class="sc-msg" id="sc-msg">
+      <div>
+       data-closable class="sc-msg-error alert-box callout alert"&gt;😢 Sorry, it didn’t work out: Backfeed was unable to load the XML feed from the origin. The feed is inaccessible or unparsable. You can
+       <a href="https://validator.w3.org/feed/check.cgi?url=https%3A%2F%2Fwww.seattletimes.com%2Ffeed%2F">
+        validate the feed
+       </a>
+       , send us the URL to test, or
+       <a href="https://backfeed.app/">
+        try again
+       </a>
+       .
+       <a aria-label="Dismiss alert" class="close close-button">
+        <span aria-hidden="true"/>
+       </a>
+      </div>
+     </div>
+     <hr>
+      <footer>
+       Backfeed is a
+       <a href="https://www.strangecode.com/">
+        Strangecode
+       </a>
+       project.
+      </footer>
+     </hr>
+    </header>
+   </body>
+  </meta>
+ </head>
+</html>

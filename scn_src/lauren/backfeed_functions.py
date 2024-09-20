@@ -2,6 +2,7 @@ import os
 from urllib.parse import quote
 from bs4 import BeautifulSoup
 import requests
+import time
 """
 Notes:
 run the command "source ~/.bashrc" before 
@@ -23,19 +24,24 @@ def backfeed_loader(num_snaps: int, rss_feed: str):
     #URL Format: https://backfeed.app/KEY/OPTIONS/URL
     xml_doc = f"https://backfeed.app/{BACKFEED_API_KEY}/s:{num_snaps}/{rss_feed}"
 
+    start_time = time.time()
     response = requests.get(xml_doc)
+    elapsed_time = time.time() - start_time
+    print(elapsed_time)
+
     soup = BeautifulSoup(response.content, features="xml")
     
     #Pull doc and retrieve items (element tree?)
     #make document name
-    doc_name = rss_feed.split("/")[2].split(".")[0] + ".xml"
+    doc_name = rss_feed.split("/")[2] + ".xml"
     doc_path = "backfeed_files"
     file_path = os.path.join(doc_path, doc_name) 
     with open(file_path, 'w') as f:
         f.write(soup.prettify())
+    
     #establish file path
 
 
 
 if __name__ == "__main__":
-    backfeed_loader(5, "https://zunews.com/feed/")
+    backfeed_loader(200, "https://www.seattletimes.com/feed/")
