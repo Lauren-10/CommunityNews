@@ -34,10 +34,5 @@ def f1_score(scraper_classification, ground_truth_classification):
      score = 2 * ((precision * recall) / (precision + recall)) if (precision + recall) > 0 else 0
      return score 
 
-score_value = calculate_classifier_score(df_scraper, df_ground_truth, precision_recall)
 
-#print
-if score_value == calculate_classifier_score(df_scraper, df_ground_truth, f1_score):
-    print(f"the f1 score value is {score_value}")
-else:
-    print(f"precision and recall is {score_value}")
+    

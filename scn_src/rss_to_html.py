@@ -141,7 +141,3 @@ def rss_url(news_source, link):
             "Titles" : titles,
             "Publication Date": pub_date} 
         
-
-if __name__ == "__main__":
-    df = pd.read_csv("rss_masterlist.csv")
-    parse_url(df).to_csv("final_urls.csv")

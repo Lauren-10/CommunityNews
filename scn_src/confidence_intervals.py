@@ -4,7 +4,8 @@ from spicy import stats
 from .llm_scraper_function import run_llm_scraper
 
 
-#function that merges the dataframe and returns score function with boolean values 
+#function that merges the dataframe and returns score function with boolean values
+'''as far as I can tell, we never call this function'''
 def calculate_classifier_score(df_scraper, df_ground_truth, score_function):
     merged_dataframe = pd.merge(df_scraper, df_ground_truth[['is_student_reported', 'urls']], on='urls', how='left', suffixes=('_scraper', '_ground_truth'))
     ground_truth_classification = merged_dataframe['is_student_reported_ground_truth']
@@ -57,7 +58,6 @@ def confidence_interval_precision(precision_values):
     standard_error = sample_std / np.sqrt(n)
     confidence_level = 0.95
     degrees_freedom = n - 1
-    breakpoint()
     confidence_interval_precision = stats.t.interval(confidence_level, degrees_freedom, loc=sample_mean, scale=standard_error)
     print(f"Sample Mean Precision: {sample_mean}")
     print(f"95% Confidence Interval Precision: {confidence_interval_precision}")
@@ -74,7 +74,6 @@ def confidence_interval_recall(recall_values):
     standard_error = sample_std / np.sqrt(n)
     confidence_level = 0.95
     degrees_freedom = n - 1
-    breakpoint()
     confidence_interval_recall = stats.t.interval(confidence_level, degrees_freedom, loc=sample_mean, scale=standard_error)
     print(f"Sample Mean Recall: {sample_mean}")
     print(f"95% Confidence Interval Recall: {confidence_interval_recall}")
@@ -83,7 +82,6 @@ def confidence_interval_recall(recall_values):
 #confidence interval for f1
 #sample array, outputs for f1
 def confidence_interval_f1(f1_values):
-    #data_f1 = [f1_values]
     data_array = np.array(f1_values)
     sample_mean = np.mean(data_array)
     sample_std = np.std(data_array, ddof=1) #ddof = 1 signifies it is a sample vs entire population
@@ -103,7 +101,7 @@ def auto_precision_recall(num_chunks, llm, prompts, schema, tags_to_extract):
     df_ground_truth = pd.read_csv('ground_truth_df.csv')
     df_ground_truth = df_ground_truth.sample(10)
     #df_ground_truth = df_ground_truth.iloc[0:1].reset_index()
-    breakpoint()
+    '''The following line needs to be changed i think. This can instead be a sql query'''
     df_scraper = run_llm_scraper(df_ground_truth, llm, prompts, schema, tags_to_extract)
     for _ in range(num_chunks):
         precision, recall = precision_recall(list(df_scraper["is_student"]) , list(df_ground_truth["is_student_reported"]))
@@ -113,7 +111,6 @@ def auto_precision_recall(num_chunks, llm, prompts, schema, tags_to_extract):
     for _ in range (num_chunks):
         f1 = f1_score(df_scraper, df_ground_truth)
         f1_values.append(f1)
-    breakpoint()
     precision_confidence = confidence_interval_precision(precision_values)
     recall_confidence = confidence_interval_recall(recall_values)
     f1_confidence = confidence_interval_f1(f1_values)

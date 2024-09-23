@@ -152,6 +152,3 @@ GROUP BY
 ORDER BY
 	student_to_total_ratio DESC;
 """
-data_viz2_df = db_admin.load_df_from_table(data_viz2_query)
-data_viz2_df.fillna(value= int(0), inplace= True)
-data_viz2_df.to_csv("data_viz2.csv", index=False)
