@@ -114,6 +114,7 @@ def parse_url(df_rss: pd.DataFrame):
 
 
 
+
 def rss_url(news_source, link):  
     #handling the various exceptions (403, formating, etc.)
     #initializing lists for data collection

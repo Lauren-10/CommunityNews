@@ -1,5 +1,4 @@
 import os
-from urllib.parse import quote
 from bs4 import BeautifulSoup
 import requests
 import time
@@ -24,6 +23,10 @@ def backfeed_loader(num_snaps: int, rss_feed: str):
     #URL Format: https://backfeed.app/KEY/OPTIONS/URL
     xml_doc = f"https://backfeed.app/{BACKFEED_API_KEY}/s:{num_snaps}/{rss_feed}"
 
+    #Timeout occurs at 100 seconds for every feed (approx 30 snapshots)
+    #URL not found after 6 seconds
+    #Approx run time for all xml files 
+    #(assuming we are grabbing the fixed 5000 snapshots): 30 days 
     start_time = time.time()
     response = requests.get(xml_doc)
     elapsed_time = time.time() - start_time
@@ -44,4 +47,4 @@ def backfeed_loader(num_snaps: int, rss_feed: str):
 
 
 if __name__ == "__main__":
-    backfeed_loader(200, "https://www.seattletimes.com/feed/")
+    backfeed_loader(30, "https://zunews.com/feed/")
