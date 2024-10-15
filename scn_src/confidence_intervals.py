@@ -1,56 +1,41 @@
 import pandas as pd 
 import numpy as np
-from spicy import stats
 from .llm_scraper_function import run_llm_scraper
-
-
-#function that merges the dataframe and returns score function with boolean values
-'''as far as I can tell, we never call this function'''
-def calculate_classifier_score(df_scraper, df_ground_truth, score_function):
-    merged_dataframe = pd.merge(df_scraper, df_ground_truth[['is_student_reported', 'urls']], on='urls', how='left', suffixes=('_scraper', '_ground_truth'))
-    ground_truth_classification = merged_dataframe['is_student_reported_ground_truth']
-    scraper_classification = merged_dataframe['is_student_reported_scraper']
-    return score_function(scraper_classification, ground_truth_classification)
 
 #function for percision and recall
 def precision_recall(scraper_classification, ground_truth_classification):
-    """takes in two dataframes, zips it and each boolean from the zip corresponds to g and s respectively 
-    g and s is true if both g,s = true, true
-    not g and s is true if g,s = false, true 
-    g and not s is true if g,s = true, false"""
-    print(f"ground_truth_classification: {ground_truth_classification}")
-    print(f"scraper_classification: {scraper_classification}")
+    """
+    called by auto_precision_recall. compares is_student results from scraper and hand-annotated dataset,
+    calculates precision and recall scores based on frequency of true positives, false positives, and false negatives
+
+    Parameters:
+    scraper_classification(list(bool)): contains is_student values for the ChatGPT scraper
+    ground_truth_classification(list(bool)): contains is_student values for the hand_annotated dataset
+
+    Returns:
+    floats: precision, recall, and f1 diagnostics
+    """
     TP = sum((g and s) for g,s in zip(ground_truth_classification, scraper_classification))
     FP = sum((not g and s) for g, s in zip(ground_truth_classification, scraper_classification))
     FN = sum((g and not s) for g,s in zip(ground_truth_classification, scraper_classification))
-    precision = ((TP) / (FP + TP)) if (TP + FP) > 0 else 0 #FN
+    precision = ((TP) / (FP + TP)) if (TP + FP) > 0 else 0 
     recall = ((TP) / (FN + TP)) if (FN + TP ) > 0 else 0 
-    #standard_deviation = scraper_classification.std()
-   # print("standard deviation is", standard_deviation)
-    return precision, recall  
+    f1_score = 2 * ((precision * recall) / (precision + recall)) if (precision + recall) > 0 else 0 
+
+    return precision, recall, f1_score
 
 
-"""function for f1_score,
-calls precision and recall function from above, and assigns values to variables to work with"""
 
-def f1_score(scraper_classification, ground_truth_classification):
-     precision, recall = precision_recall(list(scraper_classification["is_student"]), (list(ground_truth_classification["is_student_reported"])))
-     score = 2 * ((precision * recall) / (precision + recall)) if (precision + recall) > 0 else 0
-     return score 
-
-# score_value = calculate_classifier_score(df_scraper, df_ground_truth, precision_recall)
-
-# #print
-# if score_value == calculate_classifier_score(df_scraper, df_ground_truth, f1_score):
-#     print(f"the f1 score value is {score_value}")
-# else:
-#     print(f"precision and recall is {score_value}")
-
-
-#confidence interval for precision
-#sample array, outputs for precision
 def confidence_interval_precision(precision_values):
-    #data_precision = [precision_values]
+    '''
+    creates an array of precision scores and calculates mean and 95% confidence interval
+    
+    Parameter: 
+    precision_values (list(float)): precision scores in sample
+    
+    Returns: float
+    '''
+
     data_array = np.array(precision_values)
     sample_mean = np.mean(data_array)
     sample_std = np.std(data_array, ddof=1)  #ddof = 1 signifies it is a sample vs entire population
@@ -63,10 +48,16 @@ def confidence_interval_precision(precision_values):
     print(f"95% Confidence Interval Precision: {confidence_interval_precision}")
     return confidence_interval_precision
 
-#confidence interval for recall
-#sample array, outputs for recall
+
 def confidence_interval_recall(recall_values):
-    #data_recall = [recall_values]
+    '''
+    creates an array of recall scores and calculates mean and 95% confidence interval
+    
+    Parameter: 
+    recall_values (list(float)): recall scores in sample
+    
+    Returns: float
+    '''
     data_array = np.array(recall_values)
     sample_mean = np.mean(data_array)
     sample_std = np.std(data_array, ddof=1) #ddof = 1 signifies it is a sample vs entire population
@@ -82,6 +73,15 @@ def confidence_interval_recall(recall_values):
 #confidence interval for f1
 #sample array, outputs for f1
 def confidence_interval_f1(f1_values):
+    '''
+    creates an array of f1 scores and calculates mean and 95% confidence interval
+    
+    Parameter: 
+    f1_values (list(float)): f1 scores in sample
+    
+    Returns: float
+    '''
+    
     data_array = np.array(f1_values)
     sample_mean = np.mean(data_array)
     sample_std = np.std(data_array, ddof=1) #ddof = 1 signifies it is a sample vs entire population
@@ -95,22 +95,43 @@ def confidence_interval_f1(f1_values):
     return confidence_interval_f1
 
 
-def auto_precision_recall(num_chunks, llm, prompts, schema, tags_to_extract):
+def auto_precision_recall(num_chunks, llm, prompts, schema, tags_to_extract, ground_truth_csv):
+    '''
+    calculates the 95% confidence interval for a sample of precision, recall, 
+    and f1_scores based on ChatGPT's performance in identifying students.
+
+    num_chunks (int): specifies the number of times diagnostics are calculated
+    llm (ChatOpenAI class object): specifies temperature and model name
+    prompts (list of strs): defined in prompt_draft.py
+    schema (Article(BaseModel) class object): specifies structure of llm output
+    tags_to_extract (list of strs): locates portions of HTML for scraper to process
+    ground_truth_df (str): directory pathway to ground truth csv
+
+    Returns:
+    dict
+
+    '''
+    #create empty lists for each diagnostic
     precision_values = []
     recall_values = []
-    df_ground_truth = pd.read_csv('ground_truth_df.csv')
-    df_ground_truth = df_ground_truth.sample(10)
-    #df_ground_truth = df_ground_truth.iloc[0:1].reset_index()
-    '''The following line needs to be changed i think. This can instead be a sql query'''
-    df_scraper = run_llm_scraper(df_ground_truth, llm, prompts, schema, tags_to_extract)
+    f1_values = []
+
+
+
+    #load hand-annotated dataset to which ChatGPT will compare its peformance
+    df_ground_truth = pd.read_csv(ground_truth_csv)
+
+    #run ChatGPT on the same dataset a specified number of times
+    df_scraper = run_llm_scraper(df_ground_truth, llm=llm, prompts=prompts, schema=schema, tags_to_extract=tags_to_extract)
     for _ in range(num_chunks):
-        precision, recall = precision_recall(list(df_scraper["is_student"]) , list(df_ground_truth["is_student_reported"]))
+        df_ground_truth_sample = df_ground_truth.sample(df_ground_truth.shape[0], replace=True)
+        df_scraper_sample = df_scraper.iloc[df_ground_truth_sample.index.values]
+        precision, recall, score = precision_recall(list(df_scraper_sample["is_student"]) , list(df_ground_truth_sample["is_student_reported"]))
         precision_values.append(precision)
         recall_values.append(recall)
-    f1_values = []
-    for _ in range (num_chunks):
-        f1 = f1_score(df_scraper, df_ground_truth)
-        f1_values.append(f1)
+        f1_values.append(score)
+
+    #calculate the mean and 95% confidence interval for each diagonstic
     precision_confidence = confidence_interval_precision(precision_values)
     recall_confidence = confidence_interval_recall(recall_values)
     f1_confidence = confidence_interval_f1(f1_values)

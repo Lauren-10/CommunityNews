@@ -5,6 +5,8 @@ from langchain_core.prompts import (
 from langchain_openai import ChatOpenAI
 
 def prompt():
+    '''Returns: ChatPromptTemplate class object '''
+
     examples = [
         {"input": """"This story was produced by Fresh Take Florida,
     a news service of the University of Florida College of Journalism and Communications.
@@ -37,8 +39,7 @@ def prompt():
         example_prompt=example_prompt,
         examples=examples,
     )
-    #want to return final prompt
-    #print(few_shot_prompt.format())
+    
     final_prompt = ChatPromptTemplate.from_messages(
         [
             ("system", """You are an AI assistant that can read and digest articles

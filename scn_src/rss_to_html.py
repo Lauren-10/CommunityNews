@@ -7,11 +7,18 @@ import xml.etree.ElementTree as ET
 import html
 import tqdm
 
-
-"""
-Function load_rss_feed takes a list of urls and finds all items
-"""
 def load_rss_feed(urls, file):
+    '''
+    called by rss_to_html.
+    decodes each url and selects locates all items
+
+    parameters:
+    urls (str): links to rss feed
+    file (bool): determines whether or not the url links to a file (False by default in this version)
+    
+    returns:
+    ResultSet[str]: stored in rss_url function as 'items' variable.
+'''
 
     if file == False:
         loader = AsyncChromiumLoader(urls)
@@ -29,14 +36,19 @@ def load_rss_feed(urls, file):
 Add specific try and except blocks
 """
 
-"""
-parse_url takes a data frame filled with news sources
-and their rss feeds and writes to another csv article titles,
-date published, author name, and the news source it originated from
-"""
 #convert input to data frame
 #df_rss: pd.DataFrame
 def parse_url(df_rss: pd.DataFrame):
+    '''
+    called by backfeed_to_sql in sql_pipeline.py
+    for each rss feed, create a dictionary entry containing all html data extractable through html data.
+
+    Parameters:
+    df_rss(dataframe): dataframe containing publication name and rss feed
+
+    returns:
+    dataframe: contains publication, url, article_title, date, author, is_student columns, the last two remaining NULL.
+    '''
     #empty lists to store data from scraping
     rss = []
     news_sources = []
@@ -111,6 +123,18 @@ def parse_url(df_rss: pd.DataFrame):
 
 
 def rss_url(news_source, link):  
+    '''
+    called by rss_to_html.
+    for each rss feed, create a dictionary entry containing all html data extractable through html data.
+
+    Parameters:
+    news_source (str): publication of news story
+    link (str): url of news story
+
+    returns:
+    dict: contains title and publication date data. stored in rss_to_htmls as 'link' variable.
+    '''
+
     #handling the various exceptions (403, formating, etc.)
     #initializing lists for data collection
     titles = []

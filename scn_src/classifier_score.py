@@ -1,5 +1,6 @@
 import pandas as pd 
 import numpy as np
+
 df_scraper = pd.read_csv('scraper_dataframe.csv')
 df_ground_truth = pd.read_csv('ground_truth_df.csv')
 
