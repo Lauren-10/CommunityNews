@@ -27,8 +27,7 @@ def extract(content: str, schema, llm, prompt):
     final_chain=chain.invoke({"input":content})
     return vars(final_chain)
     
-
-
+#ASK WILL ABOUT THIS
 def load_docs(urls,tags_to_extract = ["span",'p','a','li']): 
     '''
     called by extract_all_metadata. Locates portion of HTML in each url and converts it into legible datatype.
@@ -69,7 +68,7 @@ def text_splitter(doc, schema, llm, prompts):
     if splits == []:
         print("URL doesnt work")
     elif splits != []:
-        extracted_content = extract(content=splits[0], schema=schema, llm = llm, prompst=prompts)        
+        extracted_content = extract(content=splits[0], schema=schema, llm = llm, prompt=prompts)
         print("extracted content", extracted_content)
         return extracted_content
 

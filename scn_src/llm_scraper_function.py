@@ -15,13 +15,10 @@ def run_llm_scraper(df, llm, prompts, schema, tags_to_extract):
     tags_to_extract (list of strs):  locates portions of HTML for scraper to process
 
     Returns: 
-    df: author and is_student data for each url in chunk
+    final_df: author and is_student data for each url in chunk
 '''
     urls = df["url"]
     url_list = urls.to_list() 
     extracted_urls = extract_all_metadata(url_list, llm=llm, prompts=prompts, schema=schema, tags_to_extract=tags_to_extract)
-    thing = pd.DataFrame.from_dict(extracted_urls,orient='columns')
-    final_dict = {"url": url_list,
-                  "author": (list(thing["news_article_author"])),
-                  "is_student": thing["is_author_student_journalist"]}
-    return pd.DataFrame.from_dict(final_dict)
+    final_df = pd.DataFrame.from_dict(extracted_urls,orient='columns')
+    return final_df
