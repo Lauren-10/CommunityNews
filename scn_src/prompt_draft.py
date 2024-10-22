@@ -59,9 +59,3 @@ def prompt():
         ]
     )
     return final_prompt
-
-chain = prompt() | ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
-
-print(chain.invoke({"input": """Lucia McCallum interns as the Hardwick Gazette’s community resilience reporter
-                     with support from the Leahy Institute for Rural Partnerships. She works with editors at Community News Service,
-                     a University of Vermont journalism program."""}).content)

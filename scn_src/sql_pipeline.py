@@ -1,4 +1,3 @@
-from scn_src.db_connectors import MySQLConnector
 from scn_src.rss_to_html import parse_url
 from scn_src.llm_scraper_function import run_llm_scraper
 from sqlalchemy.sql import text
@@ -9,47 +8,58 @@ from functools import partial
 
 def feeds_to_sql(db_admin, rss_feed_csv, table_name):
     '''
-    sends finalized rss feed list to MySQL
+    Sends finalized rss feed list to MySQL.
 
     Parameters:
+    db_admin(MySQLConnector class object): MySQL user CRAIG CHECK IF THIS IS SUCCINCT ENOUGH
     rss_feeds_csv(str): file pathway to .csv containing RSS feeds for each publication
     table_name(str): name of MySQL table to be created/updated
-    db_admin(MySQLConnector class object): MySQL user CRAIG CHECK IF THIS IS SUCCINCT ENOUGH
 
     Returns: none
 '''
-
     try:
         # Open and read the file
         with open(rss_feed_csv) as file:
-            df = pd.read_csv(rss_feed_csv)
+            df = pd.read_csv(file)
             #send dataframe to sql
             db_admin.add_df_to_table(table_name, df)     
 
     except Exception as e:
         print(f"An error occurred: {e}")
-'''ADD function to put final rss .csv path into MySQL, takes (str,str)'''
 
 def urls_to_sql(db_admin, feeds_table, final_table): 
     '''
-    runs parse_url on all feeds in the datafram and updates specified MySQL table with 
+    Runs parse_url on all feeds in the datafram and updates specified MySQL table with 
     publication, is_uni_newspaper, url, article_title, and date columns filled. author and is_student fields will remain NULL.
 
     Parameters:
-    feeds (str): the name of the MySQL table created by feeds_to_MySQL
-    table_name (str): the name of the MySQL table to be updated/created
     db_admin(MySQLConnector class object): specifies MySQL client username and permission level
+    feeds_table (str): the name of the MySQL table created by feeds_to_MySQL
+    table_name (str): the name of the MySQL table to be updated/created
 
     Returns: none
 '''
-    df = parse_url(feeds_table)
-    db_admin.add_df_to_table(final_table, df, if_exists='replace')
+    query = f"""
+    SELECT *
+    FROM {feeds_table}
+    """
+
+    feeds_df = db_admin.load_df_from_table(query)
+    final_df = parse_url(feeds_df)
+    db_admin.add_df_to_table(final_table, final_df, if_exists='replace')
+
+    #replace 'null' string with NULL
+    with db_admin.engine.connect() as connection:
+        for i,row in final_df.iterrows():
+            sql_query = f"UPDATE {final_table} SET author = NULL, is_student = NULL WHERE author = 'null'"
+            connection.execute(text(sql_query))
+        connection.commit()
     print(f"added data to {final_table} in MySQL")
 
 
 def scraper_inner_loop(df, llm, prompts, schema, tags_to_extract, table_name, db_admin):
     '''
-    called by chatgpt_to_sql. runs run_llm_scraper on each chunk, 
+    Called by chatgpt_to_sql. Runs run_llm_scraper on each chunk, 
     then updates the author and is_student columns in indicated MySQL table.
     
     Parameters:
@@ -64,12 +74,12 @@ def scraper_inner_loop(df, llm, prompts, schema, tags_to_extract, table_name, db
     Returns: none
 '''
     chatgpt_data_df = run_llm_scraper(df=df, llm=llm, prompts=prompts, schema=schema, tags_to_extract=tags_to_extract)
-    chatgpt_data_df.author = chatgpt_data_df.author.str.replace(r"[\"\']","") #remove apostrophes from author names
+    chatgpt_data_df.news_article_author = chatgpt_data_df.news_article_author.str.replace(r"[\"\']","") #remove apostrophes from author names
 
     #update each row in sql
     with db_admin.engine.connect() as connection:
         for i,row in chatgpt_data_df.iterrows():
-            sql_query = f"UPDATE {table_name} SET author = '{row['author']}', is_student = {row['is_student']} WHERE url = '{row['url']}'"
+            sql_query = f"UPDATE {table_name} SET author = '{row['news_article_author']}', is_student = {row['is_author_student_journalist']} WHERE url = '{row['urls']}'"
             connection.execute(text(sql_query))
         connection.commit()
     print(f'added data to {table_name} in MySQL')
@@ -77,7 +87,7 @@ def scraper_inner_loop(df, llm, prompts, schema, tags_to_extract, table_name, db
 
 def chatgpt_to_sql(chunk_size, llm, prompts, schema, tags_to_extract, table_name, db_admin, multiprocessor_on):
     '''
-    selects portion of MySQL table in which ChatGPT data has not yet entered, separates rows into chunks of specified size, 
+    Selects portion of MySQL table in which ChatGPT data has not yet entered, separates rows into chunks of specified size, 
     and runs scraper_inner_loop on each.
 
     Parameters:
