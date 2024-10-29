@@ -1,13 +1,6 @@
-from langchain_community.document_loaders import AsyncHtmlLoader
 from langchain_community.document_transformers import BeautifulSoupTransformer
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import AsyncChromiumLoader
-import asyncio
-from langchain.chains import create_extraction_chain
-import pprint
-from langchain_openai import ChatOpenAI
-import pandas as pd
-from scn_src.prompt_draft import prompt
 
 def extract(content: str, schema, llm, prompt):
     '''

@@ -1,5 +1,6 @@
 import pandas as pd 
 import numpy as np
+from scipy import stats
 from .llm_scraper_function import run_llm_scraper
 
 #function for percision and recall
@@ -23,7 +24,6 @@ def precision_recall(scraper_classification, ground_truth_classification):
     f1_score = 2 * ((precision * recall) / (precision + recall)) if (precision + recall) > 0 else 0 
 
     return precision, recall, f1_score
-
 
 
 def confidence_interval_precision(precision_values):
@@ -58,6 +58,7 @@ def confidence_interval_recall(recall_values):
     
     Returns: float
     '''
+    
     data_array = np.array(recall_values)
     sample_mean = np.mean(data_array)
     sample_std = np.std(data_array, ddof=1) #ddof = 1 signifies it is a sample vs entire population
@@ -70,8 +71,7 @@ def confidence_interval_recall(recall_values):
     print(f"95% Confidence Interval Recall: {confidence_interval_recall}")
     return confidence_interval_recall
 
-#confidence interval for f1
-#sample array, outputs for f1
+
 def confidence_interval_f1(f1_values):
     '''
     creates an array of f1 scores and calculates mean and 95% confidence interval
@@ -95,38 +95,45 @@ def confidence_interval_f1(f1_values):
     return confidence_interval_f1
 
 
-def auto_precision_recall(num_chunks, llm, prompts, schema, tags_to_extract, ground_truth_csv):
+def auto_precision_recall(bootstrap_iterations, llm, prompts, schema, tags_to_extract, ground_truth_csv):
     '''
     calculates the 95% confidence interval for a sample of precision, recall, 
     and f1_scores based on ChatGPT's performance in identifying students.
 
-    num_chunks (int): specifies the number of times diagnostics are calculated
+    bootstrap_iterations (int): specifies the number of times diagnostics are calculated
     llm (ChatOpenAI class object): specifies temperature and model name
     prompts (list of strs): defined in prompt_draft.py
     schema (Article(BaseModel) class object): specifies structure of llm output
     tags_to_extract (list of strs): locates portions of HTML for scraper to process
-    ground_truth_df (str): directory pathway to ground truth csv
+    ground_truth_csv (str): directory pathway to ground truth csv
 
     Returns:
     dict
-
     '''
+    
     #create empty lists for each diagnostic
     precision_values = []
     recall_values = []
     f1_values = []
 
-
-
     #load hand-annotated dataset to which ChatGPT will compare its peformance
     df_ground_truth = pd.read_csv(ground_truth_csv)
+    df_ground_truth = df_ground_truth.drop(['news_article_title','Partnership'], axis=1)
 
-    #run ChatGPT on the same dataset a specified number of times
+    #run ChatGPT on the dataset
     df_scraper = run_llm_scraper(df_ground_truth, llm=llm, prompts=prompts, schema=schema, tags_to_extract=tags_to_extract)
-    for _ in range(num_chunks):
-        df_ground_truth_sample = df_ground_truth.sample(df_ground_truth.shape[0], replace=True)
-        df_scraper_sample = df_scraper.iloc[df_ground_truth_sample.index.values]
-        precision, recall, score = precision_recall(list(df_scraper_sample["is_student"]) , list(df_ground_truth_sample["is_student_reported"]))
+
+    #remove extraneous columns and convert classifications into bools
+    df_scraper = df_scraper.drop(['news_article_author'], axis=1)
+    df_scraper = df_scraper.rename(columns={'urls':'url'})
+    df_scraper['is_author_student_journalist'] = df_scraper['is_author_student_journalist'].str.title()
+    df_scraper['is_author_student_journalist'] = df_scraper['is_author_student_journalist'].astype(bool)
+
+    merged_df = pd.merge(df_scraper, df_ground_truth, how='inner', on='url')
+    
+    for _ in range(bootstrap_iterations):
+        df_sample = merged_df.sample(merged_df.shape[0], replace=True)
+        precision, recall, score = precision_recall(list(df_sample["is_author_student_journalist"]) , list(df_sample["is_student_reported"]))
         precision_values.append(precision)
         recall_values.append(recall)
         f1_values.append(score)

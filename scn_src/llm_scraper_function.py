@@ -4,7 +4,7 @@ import pandas as pd
 #done
 def run_llm_scraper(df, llm, prompts, schema, tags_to_extract):
     '''
-    called by innter_chatgpt_to_sql. for each url in the chunk, run extract_all_metadata to access author and is_student data
+    called by inner_chatgpt_to_sql. for each url in the chunk, run extract_all_metadata to access author and is_student data
     output: dataframe, stored in sql_pipeline.py as chat_gpt_data_df variable
 
     Parameters:

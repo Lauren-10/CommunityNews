@@ -3,8 +3,8 @@ from scn_src.sql_pipeline import urls_to_sql
 import click
 
 @click.command()
-@click.argument('feeds_table', type=str) #, help='The name of your MySQL table.')
-@click.argument('final_table', type=str) #, help='The name of your MySQL table.')
+@click.option('--feeds_table', type=str, help='The name of your MySQL table containing just RSS feeds.')
+@click.option('--final_table', type=str, help='The name of your MySQL table containing all articles.')
 
 def cli(feeds_table, final_table):
     '''Command-line interface for urls_to_sql function. Runs parse_url on all feeds in the datafram and updates specified 
@@ -23,6 +23,3 @@ def cli(feeds_table, final_table):
 
 if __name__ == "__main__":
     cli()
-
-'''WORKS!!!, Yet to succeed in calling with makefile'''
-    
